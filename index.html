@@ -3,369 +3,896 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iOSUI.js - iOS-like UI Library for Web</title>
+    <title>iOSUI.js - Beautiful iOS-like UI for the Web</title>
     <link rel="stylesheet" href="iosui.css">
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            background-color: var(--ios-background);
+            box-sizing: border-box;
         }
         
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #1d1d1f;
+            background: #f5f5f7;
+        }
+        
+        /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, var(--ios-blue), var(--ios-purple));
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             text-align: center;
-            padding: 60px 20px;
+            padding: 120px 20px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
         .hero h1 {
-            font-size: 48px;
+            font-size: clamp(48px, 8vw, 96px);
             font-weight: 700;
-            margin-bottom: 16px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+            background: linear-gradient(45deg, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
-        .hero p {
-            font-size: 20px;
+        .hero-subtitle {
+            font-size: clamp(20px, 3vw, 28px);
+            font-weight: 400;
+            margin-bottom: 16px;
             opacity: 0.9;
-            margin-bottom: 32px;
+        }
+        
+        .hero-description {
+            font-size: 18px;
+            margin-bottom: 48px;
+            opacity: 0.8;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .hero-buttons {
             display: flex;
-            gap: 16px;
+            gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
+            margin-bottom: 60px;
         }
         
-        .demo-section {
-            padding: 40px 0;
+        .hero-button {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
         }
         
+        .hero-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .hero-button.primary {
+            background: white;
+            color: #667eea;
+        }
+        
+        .hero-button.primary:hover {
+            background: #f0f0f0;
+        }
+        
+        /* Device Mockup */
+        .device-mockup {
+            position: relative;
+            max-width: 300px;
+            margin: 0 auto;
+            transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+            transition: transform 0.3s ease;
+        }
+        
+        .device-mockup:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+        }
+        
+        .device-frame {
+            background: #1d1d1f;
+            border-radius: 40px;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .device-screen {
+            background: #f2f2f7;
+            border-radius: 20px;
+            overflow: hidden;
+            aspect-ratio: 9/19.5;
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Section Styles */
+        .section {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+        
+        .section-subtitle {
+            font-size: 20px;
+            text-align: center;
+            color: #6e6e73;
+            margin-bottom: 80px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Demo Grid */
         .demo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
         }
         
         .demo-card {
-            background: var(--ios-card-background);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
         }
         
         .demo-card h3 {
-            margin-bottom: 16px;
-            color: var(--ios-text-primary);
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1d1d1f;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .demo-card .description {
+            font-size: 16px;
+            color: #6e6e73;
+            margin-bottom: 24px;
+            line-height: 1.5;
         }
         
         .demo-buttons {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 16px;
         }
         
-        .code-block {
-            background: #1a1a1a;
-            color: #f8f8f2;
+        .demo-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        /* Code Examples */
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .code-header {
+            background: #e9ecef;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .code-content {
+            padding: 20px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            overflow-x: auto;
+        }
+        
+        .code-content .keyword { color: #569cd6; }
+        .code-content .string { color: #ce9178; }
+        .code-content .comment { color: #6a9955; }
+        .code-content .function { color: #dcdcaa; }
+        
+        /* Interactive Playground */
+        .playground {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .playground-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .playground-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+        
+        .playground-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        
+        .playground-demo {
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            min-height: 200px;
+        }
+        
+        /* Quick Start Guide */
+        .quick-start {
+            background: #1d1d1f;
+            color: white;
+            padding: 100px 0;
+        }
+        
+        .quick-start .section-title {
+            color: white;
+        }
+        
+        .quick-start .section-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .step-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        
+        .step-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .step-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+        
+        /* Footer */
+        .footer {
+            background: #1d1d1f;
+            color: white;
+            padding: 80px 20px 40px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .footer h2 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .footer p {
+            font-size: 18px;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+        
+        .footer-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+        
+        .footer-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .footer-copyright {
+            font-size: 14px;
+            opacity: 0.6;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 20px 60px;
+            }
+            
+            .section {
+                padding: 60px 0;
+            }
+            
+            .demo-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .playground-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .hero-buttons,
+            .footer-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+        /* Custom styles for demo components */
+        .demo-switch-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        
+        .demo-switch-label {
+            font-size: 15px;
+            color: var(--ios-text-primary);
+        }
+        
+        .demo-slider-container {
+            margin: 20px 0;
+        }
+        
+        .demo-slider-label {
+            font-size: 15px;
+            color: var(--ios-text-primary);
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .context-menu-demo {
+            background: #f0f0f0;
             padding: 20px;
             border-radius: 8px;
-            margin: 16px;
-            overflow-x: auto;
-            font-family: 'Monaco', 'Menlo', monospace;
-            font-size: 14px;
-            line-height: 1.5;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            margin: 12px 0;
         }
         
-        .installation {
-            background: var(--ios-card-background);
-            margin: 20px;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .pull-refresh-demo {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background: white;
         }
         
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 16px;
-            margin: 20px;
-        }
-        
-        .feature-card {
-            background: var(--ios-card-background);
-            border-radius: 12px;
+        .tab-demo-content {
             padding: 20px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .feature-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
-        }
-        
-        .footer {
-            background: var(--ios-card-background);
-            padding: 40px 20px;
-            text-align: center;
-            margin-top: 60px;
-            border-top: 1px solid var(--ios-divider);
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 12px;
         }
     </style>
 </head>
 <body>
     <!-- Hero Section -->
-    <div class="hero">
-        <h1>iOSUI.js</h1>
-        <p>Beautiful iOS-like UI components for the web</p>
-        <div class="hero-buttons">
-            <button class="ios-button large" onclick="downloadLibrary()">Download Library</button>
-            <button class="ios-button large secondary" onclick="viewDocs()">View Documentation</button>
-        </div>
-    </div>
-
-    <!-- Main Container -->
-    <div class="ios-container">
-        <!-- Installation -->
-        <div class="installation">
-            <h2 class="ios-section-header" style="padding: 0; position: static;">🚀 Installation</h2>
-            <p>Include the CSS and JavaScript files in your HTML:</p>
-            <div class="code-block">
-&lt;link rel="stylesheet" href="iosui.css"&gt;
-&lt;script src="iosui.js"&gt;&lt;/script&gt;
+    <section class="hero">
+        <div class="hero-content">
+            <h1>iOSUI.js</h1>
+            <p class="hero-subtitle">Beautiful iOS-like UI for the Web</p>
+            <p class="hero-description">
+                Create stunning, native-looking iOS interfaces that work perfectly on any platform. 
+                Bring the elegance of iOS design to your web applications.
+            </p>
+            
+            <div class="hero-buttons">
+                <button class="hero-button primary" onclick="scrollToDemo()">
+                    <span>🚀</span>
+                    Try Interactive Demo
+                </button>
+                <button class="hero-button" onclick="scrollToQuickStart()">
+                    <span>📚</span>
+                    Quick Start Guide
+                </button>
+                <a href="https://github.com/Hayato040404/ios-html" class="hero-button" target="_blank">
+                    <span>📦</span>
+                    View on GitHub
+                </a>
             </div>
-            <p>Or install via npm:</p>
-            <div class="code-block">
-npm install iosui-js
-            </div>
-        </div>
-
-        <!-- Features -->
-        <div class="ios-section-header">✨ Features</div>
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="feature-icon">📱</div>
-                <h3>iOS Design</h3>
-                <p>Pixel-perfect iOS interface components</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🌙</div>
-                <h3>Dark Mode</h3>
-                <p>Automatic dark mode support</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">📦</div>
-                <h3>Lightweight</h3>
-                <p>Small bundle size, no dependencies</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Fast</h3>
-                <p>Optimized for performance</p>
-            </div>
-        </div>
-
-        <!-- Demo Section -->
-        <div class="ios-section-header">🎮 Interactive Demo</div>
-        <div class="demo-grid">
-            <!-- Dialogs Demo -->
-            <div class="demo-card">
-                <h3>Dialogs & Alerts</h3>
-                <div class="demo-buttons">
-                    <button class="ios-button" onclick="showAlertDemo()">Show Alert</button>
-                    <button class="ios-button" onclick="showConfirmDemo()">Show Confirm</button>
-                    <button class="ios-button secondary" onclick="showActionSheetDemo()">Action Sheet</button>
-                </div>
-            </div>
-
-            <!-- Buttons Demo -->
-            <div class="demo-card">
-                <h3>Buttons</h3>
-                <div class="demo-buttons">
-                    <button class="ios-button">Primary Button</button>
-                    <button class="ios-button secondary">Secondary Button</button>
-                    <button class="ios-button destructive">Destructive Button</button>
-                    <button class="ios-button small">Small Button</button>
-                </div>
-            </div>
-
-            <!-- Toast Demo -->
-            <div class="demo-card">
-                <h3>Toast Notifications</h3>
-                <div class="demo-buttons">
-                    <button class="ios-button" onclick="showToastDemo()">Show Toast</button>
-                    <button class="ios-button secondary" onclick="showLongToastDemo()">Long Toast</button>
-                </div>
-            </div>
-
-            <!-- Form Demo -->
-            <div class="demo-card">
-                <h3>Form Elements</h3>
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                    <input class="ios-input" placeholder="Text Input" />
-                    <textarea class="ios-textarea" placeholder="Textarea"></textarea>
+            
+            <div class="device-mockup">
+                <div class="device-frame">
+                    <div class="device-screen" id="heroDemo">
+                        <!-- Demo content will be inserted here -->
+                    </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- List Demo -->
-        <div class="ios-section-header">📋 List Components</div>
-        <div id="demoList"></div>
+    <!-- Interactive Demo Section -->
+    <section class="section" id="demo" style="background: #f5f5f7;">
+        <div class="container">
+            <h2 class="section-title">Interactive Demo</h2>
+            <p class="section-subtitle">
+                Experience all the components in action. Click, tap, and interact with real iOS-style elements.
+            </p>
+            
+            <div class="demo-grid">
+                <!-- Dialogs & Alerts -->
+                <div class="demo-card">
+                    <h3>🗨️ Dialogs & Alerts</h3>
+                    <p class="description">Native-looking dialogs that work across all platforms with smooth animations.</p>
+                    <div class="demo-buttons">
+                        <button class="ios-button" onclick="showAlertDemo()">Show Alert</button>
+                        <button class="ios-button" onclick="showConfirmDemo()">Show Confirm</button>
+                        <button class="ios-button" onclick="showPromptDemo()">Show Prompt</button>
+                        <button class="ios-button secondary" onclick="showActionSheetDemo()">Action Sheet</button>
+                    </div>
+                    
+                    <div class="code-example">
+                        <div class="code-header">JavaScript</div>
+                        <div class="code-content">
+<span class="comment">// Simple alert</span>
+<span class="function">iosAlert</span>(<span class="string">'Title'</span>, <span class="string">'Message'</span>);
 
-        <!-- Cards Demo -->
-        <div class="ios-section-header">🃏 Card Components</div>
-        <div id="demoCards"></div>
-
-        <!-- Documentation -->
-        <div class="ios-section-header">📚 Documentation</div>
-        
-        <div class="ios-card">
-            <div class="ios-card-title">Basic Usage</div>
-            <div class="ios-card-content">
-                <p>iOSUI.js provides both CSS classes and JavaScript methods for creating iOS-like interfaces.</p>
-            </div>
-        </div>
-
-        <div class="ios-card">
-            <div class="ios-card-title">CSS Classes</div>
-            <div class="ios-card-content">
-                <div class="code-block">
-&lt;div class="ios-container"&gt;
-  &lt;div class="ios-header"&gt;
-    &lt;h1 class="ios-header-title"&gt;My App&lt;/h1&gt;
-  &lt;/div&gt;
-  
-  &lt;div class="ios-list"&gt;
-    &lt;div class="ios-list-item"&gt;
-      &lt;div class="ios-list-item-content"&gt;
-        &lt;div class="ios-list-item-title"&gt;List Item&lt;/div&gt;
-        &lt;div class="ios-list-item-subtitle"&gt;Subtitle&lt;/div&gt;
-      &lt;/div&gt;
-      &lt;span class="ios-list-item-chevron"&gt;›&lt;/span&gt;
-    &lt;/div&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
+<span class="comment">// Confirm dialog</span>
+<span class="function">iosConfirm</span>(<span class="string">'Delete?'</span>, <span class="string">'This cannot be undone'</span>)
+  .<span class="function">then</span>(<span class="keyword">confirmed</span> => {
+    <span class="keyword">if</span> (confirmed) {
+      <span class="function">iosToast</span>(<span class="string">'Deleted!'</span>);
+    }
+  });
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="ios-card">
-            <div class="ios-card-title">JavaScript API</div>
-            <div class="ios-card-content">
-                <div class="code-block">
-// Show alert
-iosAlert('Title', 'Message');
+                <!-- Buttons -->
+                <div class="demo-card">
+                    <h3>🔘 Buttons</h3>
+                    <p class="description">Beautiful buttons with iOS-style interactions and haptic feedback.</p>
+                    <div class="demo-buttons">
+                        <button class="ios-button" onclick="iosHaptic('light')">Primary Button</button>
+                        <button class="ios-button secondary" onclick="iosHaptic('medium')">Secondary Button</button>
+                        <button class="ios-button destructive" onclick="iosHaptic('heavy')">Destructive Button</button>
+                        <div class="demo-row">
+                            <button class="ios-button small" onclick="iosHaptic('success')">Small</button>
+                            <button class="ios-button large" onclick="iosHaptic('error')">Large</button>
+                        </div>
+                    </div>
+                    
+                    <div class="code-example">
+                        <div class="code-header">HTML</div>
+                        <div class="code-content">
+<span class="keyword">&lt;button</span> <span class="string">class="ios-button"</span><span class="keyword">&gt;</span>Primary<span class="keyword">&lt;/button&gt;</span>
+<span class="keyword">&lt;button</span> <span class="string">class="ios-button secondary"</span><span class="keyword">&gt;</span>Secondary<span class="keyword">&lt;/button&gt;</span>
+<span class="keyword">&lt;button</span> <span class="string">class="ios-button destructive"</span><span class="keyword">&gt;</span>Destructive<span class="keyword">&lt;/button&gt;</span>
+                        </div>
+                    </div>
+                </div>
 
-// Show confirm dialog
-iosConfirm('Confirm', 'Are you sure?').then(confirmed => {
-  if (confirmed) {
-    console.log('User confirmed');
+                <!-- Form Controls -->
+                <div class="demo-card">
+                    <h3>📝 Form Controls</h3>
+                    <p class="description">iOS-style switches, segmented controls, and sliders with smooth animations.</p>
+                    
+                    <div class="demo-switch-container">
+                        <span class="demo-switch-label">Enable notifications</span>
+                        <div id="demoSwitch1"></div>
+                    </div>
+                    
+                    <div class="demo-switch-container">
+                        <span class="demo-switch-label">Dark mode</span>
+                        <div id="demoSwitch2"></div>
+                    </div>
+                    
+                    <div id="demoSegmented" style="margin: 20px 0;"></div>
+                    
+                    <div class="demo-slider-container">
+                        <label class="demo-slider-label">Volume</label>
+                        <div id="demoSlider"></div>
+                    </div>
+                    
+                    <div class="code-example">
+                        <div class="code-header">JavaScript</div>
+                        <div class="code-content">
+<span class="comment">// Create switch</span>
+<span class="keyword">const</span> switch = iosUI.<span class="function">createSwitch</span>({
+  <span class="string">id</span>: <span class="string">'my-switch'</span>,
+  <span class="string">checked</span>: <span class="keyword">true</span>,
+  <span class="string">onChange</span>: (e) => <span class="function">console.log</span>(e.target.checked)
+});
+
+<span class="comment">// Create segmented control</span>
+<span class="keyword">const</span> segmented = iosUI.<span class="function">createSegmentedControl</span>({
+  <span class="string">segments</span>: [<span class="string">'All'</span>, <span class="string">'Photos'</span>, <span class="string">'Videos'</span>],
+  <span class="string">selectedIndex</span>: <span class="keyword">0</span>
+});
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toast Notifications -->
+                <div class="demo-card">
+                    <h3>🍞 Toast Notifications</h3>
+                    <p class="description">Elegant toast messages for user feedback with customizable positions.</p>
+                    <div class="demo-buttons">
+                        <button class="ios-button" onclick="showToastDemo()">Center Toast</button>
+                        <button class="ios-button secondary" onclick="showToastTop()">Top Toast</button>
+                        <button class="ios-button secondary" onclick="showToastBottom()">Bottom Toast</button>
+                        <button class="ios-button secondary" onclick="showLongToast()">Long Message</button>
+                    </div>
+                    
+                    <div class="code-example">
+                        <div class="code-header">JavaScript</div>
+                        <div class="code-content">
+<span class="comment">// Simple toast</span>
+<span class="function">iosToast</span>(<span class="string">'Hello World!'</span>);
+
+<span class="comment">// Toast with position and duration</span>
+iosUI.<span class="function">showToast</span>(<span class="string">'Top message'</span>, <span class="keyword">3000</span>, <span class="string">'top'</span>);
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lists -->
+                <div class="demo-card">
+                    <h3>📋 Lists</h3>
+                    <p class="description">iOS-style lists with various accessories and interactive elements.</p>
+                    <div id="demoList"></div>
+                    
+                    <div class="code-example">
+                        <div class="code-header">JavaScript</div>
+                        <div class="code-content">
+<span class="keyword">const</span> list = iosUI.<span class="function">createList</span>([
+  {
+    <span class="string">title</span>: <span class="string">'Settings'</span>,
+    <span class="string">subtitle</span>: <span class="string">'App preferences'</span>,
+    <span class="string">accessory</span>: <span class="string">'chevron'</span>,
+    <span class="string">onClick</span>: () => <span class="function">console.log</span>(<span class="string">'Settings'</span>)
+  },
+  {
+    <span class="string">title</span>: <span class="string">'Notifications'</span>,
+    <span class="string">accessory</span>: <span class="string">'switch'</span>,
+    <span class="string">switchValue</span>: <span class="keyword">true</span>
   }
+]);
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div class="demo-card">
+                    <h3>🧭 Navigation</h3>
+                    <p class="description">Navigation bars and tab bars for app-like experiences.</p>
+                    <div id="demoNavigation"></div>
+                    <div id="demoTabBar" style="margin-top: 20px;"></div>
+                    <div id="tabContent" class="tab-demo-content">Home content is displayed here</div>
+                    
+                    <div class="code-example">
+                        <div class="code-header">JavaScript</div>
+                        <div class="code-content">
+<span class="comment">// Navigation bar</span>
+<span class="keyword">const</span> navbar = iosUI.<span class="function">createNavigationBar</span>({
+  <span class="string">title</span>: <span class="string">'My App'</span>,
+  <span class="string">leftButton</span>: { <span class="string">text</span>: <span class="string">'← Back'</span> },
+  <span class="string">rightButton</span>: { <span class="string">text</span>: <span class="string">'Edit'</span> }
 });
 
-// Show toast
-iosToast('Hello World!');
-
-// Show action sheet
-iosActionSheet({
-  title: 'Choose an option',
-  buttons: [
-    { text: 'Option 1' },
-    { text: 'Option 2' },
-    { text: 'Delete', style: 'destructive' }
+<span class="comment">// Tab bar</span>
+<span class="keyword">const</span> tabbar = iosUI.<span class="function">createTabBar</span>({
+  <span class="string">tabs</span>: [
+    { <span class="string">label</span>: <span class="string">'Home'</span>, <span class="string">icon</span>: <span class="string">'🏠'</span> },
+    { <span class="string">label</span>: <span class="string">'Search'</span>, <span class="string">icon</span>: <span class="string">'🔍'</span> }
   ]
-}).then(index => {
-  console.log('Selected option:', index);
 });
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="ios-card">
-            <div class="ios-card-title">Available Components</div>
-            <div class="ios-card-content">
-                <div class="ios-list" style="margin: 16px 0;">
-                    <div class="ios-list-item">
-                        <div class="ios-list-item-content">
-                            <div class="ios-list-item-title">Buttons</div>
-                            <div class="ios-list-item-detail">Primary, Secondary, Destructive styles</div>
+                <!-- Context Menu -->
+                <div class="demo-card">
+                    <h3>📱 Context Menu</h3>
+                    <p class="description">Right-click context menus with iOS-style animations.</p>
+                    <div class="context-menu-demo" id="contextMenuDemo">
+                        Right-click or long-press here to show context menu
+                    </div>
+                    
+                    <div class="code-example">
+                        <div class="code-header">JavaScript</div>
+                        <div class="code-content">
+element.<span class="function">addEventListener</span>(<span class="string">'contextmenu'</span>, (e) => {
+  e.<span class="function">preventDefault</span>();
+  
+  iosUI.<span class="function">showContextMenu</span>({
+    <span class="string">x</span>: e.clientX,
+    <span class="string">y</span>: e.clientY,
+    <span class="string">items</span>: [
+      { <span class="string">text</span>: <span class="string">'Copy'</span>, <span class="string">icon</span>: <span class="string">'📋'</span> },
+      { <span class="string">text</span>: <span class="string">'Share'</span>, <span class="string">icon</span>: <span class="string">'📤'</span> },
+      { <span class="string">text</span>: <span class="string">'Delete'</span>, <span class="string">destructive</span>: <span class="keyword">true</span> }
+    ]
+  });
+});
                         </div>
                     </div>
-                    <div class="ios-list-item">
-                        <div class="ios-list-item-content">
-                            <div class="ios-list-item-title">Dialogs & Alerts</div>
-                            <div class="ios-list-item-detail">Native-like modal dialogs</div>
+                </div>
+
+                <!-- Pull to Refresh -->
+                <div class="demo-card">
+                    <h3>🔄 Pull to Refresh</h3>
+                    <p class="description">Native-style pull-to-refresh functionality.</p>
+                    <div class="pull-refresh-demo" data-ios-pull-to-refresh="refreshDemo">
+                        <div style="text-align: center; padding: 20px;">
+                            <p>Pull down to refresh this content</p>
+                            <p style="margin-top: 20px; color: #666;">Last updated: <span id="lastUpdated">Never</span></p>
                         </div>
                     </div>
-                    <div class="ios-list-item">
-                        <div class="ios-list-item-content">
-                            <div class="ios-list-item-title">Action Sheets</div>
-                            <div class="ios-list-item-detail">Bottom slide-up menus</div>
+                    
+                    <div class="code-example">
+                        <div class="code-header">HTML + JavaScript</div>
+                        <div class="code-content">
+<span class="keyword">&lt;div</span> <span class="string">data-ios-pull-to-refresh="refreshData"</span><span class="keyword">&gt;</span>
+  <span class="comment">&lt;!-- Your content here --&gt;</span>
+<span class="keyword">&lt;/div&gt;</span>
+
+<span class="keyword">function</span> <span class="function">refreshData</span>() {
+  <span class="keyword">return new</span> <span class="function">Promise</span>(<span class="keyword">resolve</span> => {
+    <span class="comment">// Simulate API call</span>
+    <span class="function">setTimeout</span>(() => {
+      <span class="function">console.log</span>(<span class="string">'Data refreshed!'</span>);
+      <span class="function">resolve</span>();
+    }, <span class="keyword">2000</span>);
+  });
+}
                         </div>
                     </div>
-                    <div class="ios-list-item">
-                        <div class="ios-list-item-content">
-                            <div class="ios-list-item-title">Lists</div>
-                            <div class="ios-list-item-detail">iOS-style list components</div>
-                        </div>
-                    </div>
-                    <div class="ios-list-item">
-                        <div class="ios-list-item-content">
-                            <div class="ios-list-item-title">Cards</div>
-                            <div class="ios-list-item-detail">Content containers</div>
-                        </div>
-                    </div>
-                    <div class="ios-list-item">
-                        <div class="ios-list-item-content">
-                            <div class="ios-list-item-title">Form Elements</div>
-                            <div class="ios-list-item-detail">Inputs, textareas, and more</div>
-                        </div>
-                    </div>
-                    <div class="ios-list-item">
-                        <div class="ios-list-item-content">
-                            <div class="ios-list-item-title">Toast Notifications</div>
-                            <div class="ios-list-item-detail">Temporary message overlays</div>
-                        </div>
-                    </div>
-                    <div class="ios-list-item">
-                        <div class="ios-list-item-content">
-                            <div class="ios-list-item-title">Badges</div>
-                            <div class="ios-list-item-detail">Status indicators</div>
+                </div>
+
+                <!-- Cards -->
+                <div class="demo-card">
+                    <h3>🃏 Cards</h3>
+                    <p class="description">Content containers with headers, content, and footers.</p>
+                    <div id="demoCards"></div>
+                    
+                    <div class="code-example">
+                        <div class="code-header">JavaScript</div>
+                        <div class="code-content">
+<span class="keyword">const</span> card = iosUI.<span class="function">createCard</span>({
+  <span class="string">title</span>: <span class="string">'Welcome'</span>,
+  <span class="string">content</span>: <span class="string">'Thanks for using iOSUI.js!'</span>,
+  <span class="string">footer</span>: <span class="string">'Version 1.0.0'</span>
+});
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Quick Start Guide -->
+    <section class="quick-start" id="quickstart">
+        <div class="container">
+            <h2 class="section-title">Quick Start Guide</h2>
+            <p class="section-subtitle">
+                Get started with iOSUI.js in just a few simple steps
+            </p>
+            
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Download</h3>
+                    <p class="step-description">
+                        Clone or download the library from GitHub
+                    </p>
+                    <div class="code-example">
+                        <div class="code-content">
+git clone https://github.com/Hayato040404/ios-html.git
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Include</h3>
+                    <p class="step-description">
+                        Add CSS and JS files to your HTML
+                    </p>
+                    <div class="code-example">
+                        <div class="code-content">
+<span class="keyword">&lt;link</span> <span class="string">rel="stylesheet"</span> <span class="string">href="iosui.css"</span><span class="keyword">&gt;</span>
+<span class="keyword">&lt;script</span> <span class="string">src="iosui.js"</span><span class="keyword">&gt;&lt;/script&gt;</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Create</h3>
+                    <p class="step-description">
+                        Start building beautiful iOS interfaces
+                    </p>
+                    <div class="code-example">
+                        <div class="code-content">
+<span class="function">iosAlert</span>(<span class="string">'Hello!'</span>, <span class="string">'Welcome to iOSUI.js'</span>);
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <div class="footer">
-        <p>Made with ❤️ for the web</p>
-        <p>iOSUI.js - Bringing iOS design to every platform</p>
-        <div style="margin-top: 20px;">
-            <button class="ios-button" onclick="window.open('https://github.com/yourusername/iosui-js')">
-                View on GitHub
-            </button>
+    <footer class="footer">
+        <div class="footer-content">
+            <h2>Ready to Build?</h2>
+            <p>Join thousands of developers creating beautiful iOS-like experiences on the web</p>
+            
+            <div class="footer-buttons">
+                <a href="https://github.com/Hayato040404/ios-html" class="footer-button" target="_blank">
+                    <span>⭐</span>
+                    Star on GitHub
+                </a>
+                <button class="footer-button" onclick="scrollToDemo()">
+                    <span>🎮</span>
+                    Try Demo
+                </button>
+                <a href="https://github.com/Hayato040404/ios-html/issues" class="footer-button" target="_blank">
+                    <span>💬</span>
+                    Get Support
+                </a>
+            </div>
+            
+            <div class="footer-copyright">
+                <p>&copy; 2024 iOSUI.js. Made with ❤️ for the web community.</p>
+            </div>
         </div>
-    </div>
+    </footer>
 
     <script src="iosui.js"></script>
     <script>
+        // Navigation functions
+        function scrollToDemo() {
+            document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function scrollToQuickStart() {
+            document.getElementById('quickstart').scrollIntoView({ behavior: 'smooth' });
+        }
+
         // Demo functions
         function showAlertDemo() {
-            iosAlert('Hello!', 'This is an iOS-style alert dialog. Notice how it looks native on any platform!');
+            iosAlert('Hello! 👋', 'This is a beautiful iOS-style alert that works on any platform! Notice the smooth animations and native feel.');
         }
 
         function showConfirmDemo() {
-            iosConfirm('Confirm Action', 'Do you want to proceed with this action?').then(confirmed => {
+            iosConfirm('Confirm Action', 'Do you want to proceed with this action? This demonstrates a confirmation dialog.').then(confirmed => {
                 if (confirmed) {
-                    iosToast('You confirmed the action!');
+                    iosToast('Action confirmed! ✅');
+                    iosHaptic('success');
                 } else {
                     iosToast('Action cancelled');
+                    iosHaptic('light');
+                }
+            });
+        }
+
+        function showPromptDemo() {
+            iosPrompt('Enter Your Name', 'What should we call you?', 'Your name here').then(name => {
+                if (name && name.trim()) {
+                    iosToast(`Hello, ${name}! 👋 Welcome to iOSUI.js!`);
+                    iosHaptic('success');
+                } else if (name === '') {
+                    iosToast('No name entered');
                 }
             });
         }
@@ -373,17 +900,19 @@ iosActionSheet({
         function showActionSheetDemo() {
             iosActionSheet({
                 title: 'Choose an action',
-                message: 'What would you like to do?',
+                message: 'What would you like to do? This demonstrates an action sheet with icons.',
                 buttons: [
-                    { text: 'Share' },
-                    { text: 'Copy Link' },
-                    { text: 'Save to Photos' },
-                    { text: 'Delete', style: 'destructive' }
+                    { text: 'Share', icon: '📤' },
+                    { text: 'Copy Link', icon: '🔗' },
+                    { text: 'Save to Photos', icon: '📷' },
+                    { text: 'Report', icon: '⚠️' },
+                    { text: 'Delete', style: 'destructive', icon: '🗑️' }
                 ]
             }).then(index => {
                 if (index >= 0) {
-                    const actions = ['Share', 'Copy Link', 'Save to Photos', 'Delete'];
+                    const actions = ['Share', 'Copy Link', 'Save to Photos', 'Report', 'Delete'];
                     iosToast(`Selected: ${actions[index]}`);
+                    iosHaptic('medium');
                 }
             });
         }
@@ -392,81 +921,330 @@ iosActionSheet({
             iosToast('Hello from iOS Toast! 👋');
         }
 
-        function showLongToastDemo() {
-            iosToast('This is a longer toast message that demonstrates how text wraps in the toast component.', 4000);
+        function showToastTop() {
+            iosUI.showToast('Top toast message! 📱', 2000, 'top');
         }
 
-        function downloadLibrary() {
-            iosActionSheet({
-                title: 'Download iOSUI.js',
-                buttons: [
-                    { text: 'Download CSS + JS' },
-                    { text: 'View on GitHub' },
-                    { text: 'Copy CDN Link' }
-                ]
-            }).then(index => {
-                switch(index) {
-                    case 0:
-                        iosToast('Download started!');
-                        break;
-                    case 1:
-                        iosToast('Opening GitHub...');
-                        break;
-                    case 2:
-                        iosToast('CDN link copied!');
-                        break;
-                }
+        function showToastBottom() {
+            iosUI.showToast('Bottom toast message! 📱', 2000, 'bottom');
+        }
+
+        function showLongToast() {
+            iosUI.showToast('This is a longer toast message that demonstrates how text wraps beautifully in the toast component. Perfect for detailed feedback! 🎉', 4000);
+        }
+
+        // Pull to refresh demo
+        function refreshDemo() {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+                    iosToast('Content refreshed! 🔄');
+                    resolve();
+                }, 2000);
             });
-        }
-
-        function viewDocs() {
-            iosToast('Documentation is right here on this page! 📚');
         }
 
         // Initialize demo content
         document.addEventListener('DOMContentLoaded', function() {
+            // Create demo switches
+            const demoSwitch1 = iosUI.createSwitch({
+                id: 'demo-switch-1',
+                checked: true,
+                onChange: (e) => {
+                    iosToast(e.target.checked ? 'Notifications enabled 🔔' : 'Notifications disabled 🔕');
+                    iosHaptic('light');
+                }
+            });
+            document.getElementById('demoSwitch1').appendChild(demoSwitch1);
+
+            const demoSwitch2 = iosUI.createSwitch({
+                id: 'demo-switch-2',
+                checked: false,
+                onChange: (e) => {
+                    iosToast(e.target.checked ? 'Dark mode enabled 🌙' : 'Light mode enabled ☀️');
+                    iosHaptic('light');
+                }
+            });
+            document.getElementById('demoSwitch2').appendChild(demoSwitch2);
+
+            // Create demo segmented control
+            const demoSegmented = iosUI.createSegmentedControl({
+                id: 'demo-segmented',
+                segments: ['All', 'Photos', 'Videos', 'Audio'],
+                selectedIndex: 0,
+                onChange: (e) => {
+                    iosToast(`Selected: ${e.detail.selectedSegment.textContent} 📂`);
+                    iosHaptic('light');
+                }
+            });
+            document.getElementById('demoSegmented').appendChild(demoSegmented);
+
+            // Create demo slider
+            const demoSlider = iosUI.createSlider({
+                id: 'demo-slider',
+                min: 0,
+                max: 100,
+                value: 75,
+                showValue: true,
+                onChange: (value) => {
+                    if (value % 10 === 0) { // Only show toast every 10 units
+                        iosToast(`Volume: ${value}% 🔊`);
+                    }
+                }
+            });
+            document.getElementById('demoSlider').appendChild(demoSlider);
+
             // Create demo list
             const demoList = iosUI.createList([
                 {
                     title: 'Settings',
                     subtitle: 'App preferences and configuration',
-                    onClick: () => iosToast('Settings clicked!')
+                    accessory: 'chevron',
+                    onClick: () => {
+                        iosToast('Settings tapped! ⚙️');
+                        iosHaptic('light');
+                    }
                 },
                 {
                     title: 'Notifications',
-                    subtitle: 'Manage your notifications',
-                    detail: 'On',
-                    onClick: () => iosToast('Notifications clicked!')
+                    subtitle: 'Manage your alerts and sounds',
+                    accessory: 'switch',
+                    switchValue: true,
+                    onSwitchChange: (e) => {
+                        iosToast(`Notifications ${e.target.checked ? 'enabled' : 'disabled'} 🔔`);
+                        iosHaptic('light');
+                    }
                 },
                 {
                     title: 'Privacy',
                     subtitle: 'Control your privacy settings',
-                    onClick: () => iosToast('Privacy clicked!')
+                    accessory: 'chevron',
+                    onClick: () => {
+                        iosToast('Privacy tapped! 🔒');
+                        iosHaptic('light');
+                    }
                 },
                 {
                     title: 'About',
                     subtitle: 'App information and version',
-                    chevron: false,
-                    onClick: () => iosAlert('About', 'iOSUI.js v1.0.0\nMade with ❤️ for the web')
+                    accessory: 'v1.0.0',
+                    onClick: () => iosAlert('About iOSUI.js', 'Version 1.0.0\n\nA beautiful iOS-like UI library for the web.\n\nMade with ❤️ for developers everywhere.')
                 }
             ]);
+            demoList.style.margin = '0';
             document.getElementById('demoList').appendChild(demoList);
+
+            // Create demo navigation
+            const demoNav = iosUI.createNavigationBar({
+                title: 'iOSUI Demo',
+                leftButton: {
+                    text: '← Back',
+                    onClick: () => {
+                        iosToast('Back button tapped');
+                        iosHaptic('light');
+                    }
+                },
+                rightButton: {
+                    text: 'Edit',
+                    onClick: () => {
+                        iosToast('Edit button tapped');
+                        iosHaptic('light');
+                    }
+                }
+            });
+            document.getElementById('demoNavigation').appendChild(demoNav);
+
+            // Create demo tab bar
+            const tabContent = document.getElementById('tabContent');
+            const demoTabBar = iosUI.createTabBar({
+                tabs: [
+                    { label: 'Home', icon: '🏠' },
+                    { label: 'Search', icon: '🔍' },
+                    { label: 'Favorites', icon: '❤️' },
+                    { label: 'Profile', icon: '👤' }
+                ],
+                selectedIndex: 0,
+                onChange: (index, tab) => {
+                    const contents = [
+                        'Home content is displayed here 🏠',
+                        'Search functionality would be here 🔍',
+                        'Your favorite items would appear here ❤️',
+                        'User profile information would be shown here 👤'
+                    ];
+                    tabContent.textContent = contents[index];
+                    iosToast(`Selected: ${tab.label}`);
+                    iosHaptic('light');
+                }
+            });
+            document.getElementById('demoTabBar').appendChild(demoTabBar);
 
             // Create demo cards
             const cardsContainer = document.getElementById('demoCards');
             
             const infoCard = iosUI.createCard({
-                title: 'Information Card',
-                content: 'This is an example of an iOS-style card component. Cards are great for grouping related content together.'
+                title: 'Welcome to iOSUI.js! 🎉',
+                content: 'This is an example of an iOS-style card component. Cards are perfect for grouping related content together with a clean, modern design.',
+                footer: 'Tap to interact with other components above!'
             });
+            infoCard.style.margin = '0 0 16px 0';
             cardsContainer.appendChild(infoCard);
 
             const statsCard = iosUI.createCard({
-                title: 'Statistics',
-                content: 'You can put any content inside cards, including other components, images, or custom HTML.'
+                title: 'Features Overview 📊',
+                content: 'iOSUI.js includes dialogs, buttons, forms, lists, navigation, and much more. All components are designed to match iOS design guidelines perfectly.',
+                footer: 'Try all the demos above to see them in action!'
             });
+            statsCard.style.margin = '0';
             cardsContainer.appendChild(statsCard);
+
+            // Context menu demo
+            const contextMenuDemo = document.getElementById('contextMenuDemo');
+            
+            // Right-click context menu
+            contextMenuDemo.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                
+                iosUI.showContextMenu({
+                    x: e.clientX,
+                    y: e.clientY,
+                    items: [
+                        { 
+                            text: 'Copy', 
+                            icon: '📋',
+                            onClick: () => {
+                                iosToast('Copied to clipboard! 📋');
+                                iosHaptic('success');
+                            }
+                        },
+                        { 
+                            text: 'Share', 
+                            icon: '📤',
+                            onClick: () => {
+                                iosToast('Share dialog opened! 📤');
+                                iosHaptic('light');
+                            }
+                        },
+                        { 
+                            text: 'Save', 
+                            icon: '💾',
+                            onClick: () => {
+                                iosToast('Saved successfully! 💾');
+                                iosHaptic('success');
+                            }
+                        },
+                        { 
+                            text: 'Delete', 
+                            icon: '🗑️', 
+                            destructive: true,
+                            onClick: () => {
+                                iosConfirm('Delete Item', 'Are you sure you want to delete this item?').then(confirmed => {
+                                    if (confirmed) {
+                                        iosToast('Item deleted! 🗑️');
+                                        iosHaptic('error');
+                                    }
+                                });
+                            }
+                        }
+                    ]
+                });
+            });
+
+            // Long press for mobile
+            let longPressTimer;
+            contextMenuDemo.addEventListener('touchstart', (e) => {
+                longPressTimer = setTimeout(() => {
+                    const touch = e.touches[0];
+                    const event = new MouseEvent('contextmenu', {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY
+                    });
+                    contextMenuDemo.dispatchEvent(event);
+                }, 500);
+            });
+
+            contextMenuDemo.addEventListener('touchend', () => {
+                clearTimeout(longPressTimer);
+            });
+
+            contextMenuDemo.addEventListener('touchmove', () => {
+                clearTimeout(longPressTimer);
+            });
+
+            // Create hero demo content
+            const heroDemo = document.getElementById('heroDemo');
+            heroDemo.style.padding = '20px';
+            heroDemo.style.display = 'flex';
+            heroDemo.style.flexDirection = 'column';
+            heroDemo.style.gap = '16px';
+            
+            // Add a simple list to hero demo
+            const heroList = iosUI.createList([
+                {
+                    title: 'Messages',
+                    subtitle: '3 new messages',
+                    accessory: 'chevron'
+                },
+                {
+                    title: 'Settings',
+                    subtitle: 'App preferences',
+                    accessory: 'chevron'
+                },
+                {
+                    title: 'Notifications',
+                    accessory: 'switch',
+                    switchValue: true
+                }
+            ]);
+            heroList.style.margin = '0';
+            heroDemo.appendChild(heroList);
+
+            // Add a small button to hero demo
+            const heroButton = document.createElement('button');
+            heroButton.className = 'ios-button';
+            heroButton.textContent = 'Try Demo';
+            heroButton.style.margin = '0';
+            heroButton.onclick = scrollToDemo;
+            heroDemo.appendChild(heroButton);
         });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some visual feedback for haptic feedback on non-supporting devices
+        const originalHaptic = window.iosHaptic;
+        window.iosHaptic = function(type) {
+            // Call original haptic function
+            if (originalHaptic) {
+                originalHaptic(type);
+            }
+            
+            // Visual feedback for demo purposes
+            const feedbackMessages = {
+                'light': 'Light haptic feedback 📳',
+                'medium': 'Medium haptic feedback 📳',
+                'heavy': 'Heavy haptic feedback 📳',
+                'success': 'Success haptic pattern ✅',
+                'error': 'Error haptic pattern ❌'
+            };
+            
+            if (feedbackMessages[type]) {
+                // Only show haptic feedback message occasionally to avoid spam
+                if (Math.random() < 0.3) {
+                    iosToast(feedbackMessages[type], 1000);
+                }
+            }
+        };
     </script>
 </body>
 </html>
