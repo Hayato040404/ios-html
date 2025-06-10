@@ -392,6 +392,81 @@ class iOSUI {
   }
 
   // Banner notification methods
+  showNotification(options = {}) {
+    const { title = "", message = "", type = "default", duration = 5000, actions = [], onDismiss = null } = options
+
+    const notification = document.createElement("div")
+    notification.className = `ios-notification ios-notification-${type}`
+
+    const content = document.createElement("div")
+    content.className = "ios-notification-content"
+
+    if (title) {
+      const titleEl = document.createElement("div")
+      titleEl.className = "ios-notification-title"
+      titleEl.textContent = title
+      content.appendChild(titleEl)
+    }
+
+    if (message) {
+      const messageEl = document.createElement("div")
+      messageEl.className = "ios-notification-message"
+      messageEl.textContent = message
+      content.appendChild(messageEl)
+    }
+
+    notification.appendChild(content)
+
+    if (actions.length > 0) {
+      const actionsContainer = document.createElement("div")
+      actionsContainer.className = "ios-notification-actions"
+
+      actions.forEach((action) => {
+        const btn = document.createElement("button")
+        btn.className = `ios-notification-action ${action.style || ""}`
+        btn.textContent = action.text
+        btn.onclick = (e) => {
+          e.stopPropagation()
+          this.hideNotification(notification)
+          if (action.onClick) action.onClick()
+        }
+        actionsContainer.appendChild(btn)
+      })
+
+      notification.appendChild(actionsContainer)
+    }
+
+    document.body.appendChild(notification)
+
+    // Show with animation
+    setTimeout(() => notification.classList.add("show"), 10)
+
+    // Hide after duration
+    if (duration > 0) {
+      setTimeout(() => {
+        this.hideNotification(notification)
+        if (onDismiss) onDismiss()
+      }, duration)
+    }
+
+    this.notifications.push(notification)
+    return notification
+  }
+
+  hideNotification(notification) {
+    notification.classList.remove("show")
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification)
+      }
+      const index = this.notifications.indexOf(notification)
+      if (index > -1) {
+        this.notifications.splice(index, 1)
+      }
+    }, 300)
+  }
+
+  // Banner notification methods
   showBanner(options = {}) {
     const { title = "", message = "", icon = "", duration = 5000, onClick = null } = options
 
@@ -467,81 +542,6 @@ class iOSUI {
       const index = this.banners.indexOf(banner)
       if (index > -1) {
         this.banners.splice(index, 1)
-      }
-    }, 300)
-  }
-
-  // In-app notification methods
-  showNotification(options = {}) {
-    const { title = "", message = "", type = "default", duration = 5000, actions = [], onDismiss = null } = options
-
-    const notification = document.createElement("div")
-    notification.className = `ios-notification ios-notification-${type}`
-
-    const content = document.createElement("div")
-    content.className = "ios-notification-content"
-
-    if (title) {
-      const titleEl = document.createElement("div")
-      titleEl.className = "ios-notification-title"
-      titleEl.textContent = title
-      content.appendChild(titleEl)
-    }
-
-    if (message) {
-      const messageEl = document.createElement("div")
-      messageEl.className = "ios-notification-message"
-      messageEl.textContent = message
-      content.appendChild(messageEl)
-    }
-
-    notification.appendChild(content)
-
-    if (actions.length > 0) {
-      const actionsContainer = document.createElement("div")
-      actionsContainer.className = "ios-notification-actions"
-
-      actions.forEach((action) => {
-        const btn = document.createElement("button")
-        btn.className = `ios-notification-action ${action.style || ""}`
-        btn.textContent = action.text
-        btn.onclick = (e) => {
-          e.stopPropagation()
-          this.hideNotification(notification)
-          if (action.onClick) action.onClick()
-        }
-        actionsContainer.appendChild(btn)
-      })
-
-      notification.appendChild(actionsContainer)
-    }
-
-    document.body.appendChild(notification)
-
-    // Show with animation
-    setTimeout(() => notification.classList.add("show"), 10)
-
-    // Hide after duration
-    if (duration > 0) {
-      setTimeout(() => {
-        this.hideNotification(notification)
-        if (onDismiss) onDismiss()
-      }, duration)
-    }
-
-    this.notifications.push(notification)
-    return notification
-  }
-
-  hideNotification(notification) {
-    notification.classList.remove("show")
-    setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification)
-      }
-      const index = this.notifications.indexOf(notification)
-      if (index > -1) {
-        this.notifications.splice(index, 1)
       }
     }, 300)
   }

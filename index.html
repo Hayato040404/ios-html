@@ -1118,7 +1118,7 @@ element.<span class="function">addEventListener</span>(<span class="string">'con
     <span class="string">y</span>: e.clientY,
     <span class="string">items</span>: [
       { <span class="string">text</span>: <span class="string">'Copy'</span>, <span class="string">icon</span>: <span class="string">'📋'</span> },
-      { <span class="string">text</span>: <span class="string">'Share'</span>, <span class="string">icon</span>: <span class="string">'📤'</span> },
+      { <span class="string">text</span>: <span class="string">Share'</span>, <span class="string">icon</span>: <span class="string">'📤'</span> },
       { <span class="string">text</span>: <span class="string">'Delete'</span>, <span class="string">destructive</span>: <span class="keyword">true</span> }
     ]
   });
@@ -1580,154 +1580,111 @@ git clone https://github.com/Hayato040404/ios-html.git
             });
         }
 
-        function showToastDemo() {
-            const messages = {
-                en: 'Hello from iOS Toast! 👋',
-                ja: 'iOSトーストからこんにちは！ 👋'
-            };
-            iosToast(messages[currentLanguage]);
-        }
-
+        // showBannerDemo 関数を以下に修正：
         function showBannerDemo() {
-            const messages = {
-                en: { title: 'New Message', message: 'You have received a new message from John' },
-                ja: { title: '新しいメッセージ', message: 'ジョンから新しいメッセージが届きました' }
-            };
-            const msg = messages[currentLanguage];
-            iosUI.showBanner({
-                title: msg.title,
-                message: msg.message,
-                icon: '💬',
-                duration: 5000,
-                onClick: () => {
-                    const clickMessages = {
-                        en: 'Banner clicked! 📱',
-                        ja: 'バナーがクリックされました！ 📱'
-                    };
-                    iosToast(clickMessages[currentLanguage]);
-                }
-            });
+          const messages = {
+            en: { title: 'New Message', message: 'You have received a new message from John' },
+            ja: { title: '新しいメッセージ', message: 'ジョンから新しいメッセージが届きました' }
+          };
+          const msg = messages[currentLanguage];
+          iosUI.showBanner({
+            title: msg.title,
+            message: msg.message,
+            icon: '💬',
+            duration: 5000,
+            onClick: () => {
+              const clickMessages = {
+                en: 'Banner clicked! 📱',
+                ja: 'バナーがクリックされました！ 📱'
+              };
+              iosToast(clickMessages[currentLanguage]);
+            }
+          });
         }
 
+        // showInAppNotification 関数を以下に修正：
         function showInAppNotification() {
-            const messages = {
-                en: { title: 'Download Complete', message: 'Your file has been downloaded successfully', open: 'Open', dismiss: 'Dismiss' },
-                ja: { title: 'ダウンロード完了', message: 'ファイルが正常にダウンロードされました', open: '開く', dismiss: '閉じる' }
-            };
-            const msg = messages[currentLanguage];
-            iosUI.showNotification({
-                title: msg.title,
-                message: msg.message,
-                type: 'success',
-                actions: [
-                    { text: msg.open, onClick: () => iosToast('File opened! 📁') },
-                    { text: msg.dismiss, style: 'cancel' }
-                ]
-            });
+          const messages = {
+            en: { title: 'Download Complete', message: 'Your file has been downloaded successfully', open: 'Open', dismiss: 'Dismiss' },
+            ja: { title: 'ダウンロード完了', message: 'ファイルが正常にダウンロードされました', open: '開く', dismiss: '閉じる' }
+          };
+          const msg = messages[currentLanguage];
+          iosUI.showNotification({
+            title: msg.title,
+            message: msg.message,
+            type: 'success',
+            actions: [
+              { text: msg.open, onClick: () => iosToast('File opened! 📁') },
+              { text: msg.dismiss, style: 'cancel' }
+            ]
+          });
         }
 
-        // Progress demo functions
-        let progressValue = 0;
-        let activityVisible = false;
-
-        function animateProgress() {
-            const progressBar = document.querySelector('#demoProgressBar .ios-progress-bar');
-            const circularProgress = document.querySelector('#demoCircularProgress .ios-circular-progress');
-            
-            if (progressBar && circularProgress) {
-                progressValue = 0;
-                const interval = setInterval(() => {
-                    progressValue += 0.02;
-                    iosUI.updateProgress(progressBar, progressValue);
-                    iosUI.updateCircularProgress(circularProgress, progressValue);
-                    
-                    if (progressValue >= 1) {
-                        clearInterval(interval);
-                        const messages = {
-                            en: 'Progress complete! 🎉',
-                            ja: 'プログレス完了！ 🎉'
-                        };
-                        iosToast(messages[currentLanguage]);
-                    }
-                }, 50);
-            }
-        }
-
-        function toggleActivity() {
-            const activityIndicator = document.querySelector('#demoActivityIndicator .ios-activity-indicator');
-            if (activityIndicator) {
-                activityVisible = !activityVisible;
-                if (activityVisible) {
-                    iosUI.showActivityIndicator(activityIndicator);
-                } else {
-                    iosUI.hideActivityIndicator(activityIndicator);
-                }
-            }
-        }
-
-        // Picker demo functions
+        // showDatePicker 関数を以下に修正：
         function showDatePicker() {
-            const messages = {
-                en: 'Date selected: {date}',
-                ja: '選択された日付: {date}'
-            };
-            iosUI.showDatePicker({
-                mode: 'date',
-                value: new Date(),
-                onSelect: (date) => {
-                    const msg = messages[currentLanguage];
-                    iosToast(msg.replace('{date}', date.toLocaleDateString()));
-                }
-            });
+          const messages = {
+            en: 'Date selected: {date}',
+            ja: '選択された日付: {date}'
+          };
+          iosUI.showDatePicker({
+            mode: 'date',
+            value: new Date(),
+            onSelect: (date) => {
+              const msg = messages[currentLanguage];
+              iosToast(msg.replace('{date}', date.toLocaleDateString()));
+            }
+          });
         }
 
+        // showCustomPicker 関数を以下に修正：
         function showCustomPicker() {
-            const options = {
-                en: {
-                    columns: [['Small', 'Medium', 'Large'], ['Red', 'Green', 'Blue']],
-                    message: 'Selected: {size}, {color}'
-                },
-                ja: {
-                    columns: [['小', '中', '大'], ['赤', '緑', '青']],
-                    message: '選択: {size}, {color}'
-                }
-            };
-            const opt = options[currentLanguage];
-            iosUI.showPicker({
-                columns: opt.columns,
-                selectedIndexes: [0, 0],
-                onSelect: (indexes, values) => {
-                    const msg = opt.message.replace('{size}', values[0]).replace('{color}', values[1]);
-                    iosToast(msg);
-                }
-            });
+          const options = {
+            en: {
+              columns: [['Small', 'Medium', 'Large'], ['Red', 'Green', 'Blue']],
+              message: 'Selected: {size}, {color}'
+            },
+            ja: {
+              columns: [['小', '中', '大'], ['赤', '緑', '青']],
+              message: '選択: {size}, {color}'
+            }
+          };
+          const opt = options[currentLanguage];
+          iosUI.showPicker({
+            columns: opt.columns,
+            selectedIndexes: [0, 0],
+            onSelect: (indexes, values) => {
+              const msg = opt.message.replace('{size}', values[0]).replace('{color}', values[1]);
+              iosToast(msg);
+            }
+          });
         }
 
-        // Modal and popover demos
+        // showModalDemo 関数を以下に修正：
         function showModalDemo() {
-            const messages = {
-                en: { title: 'Settings', content: 'This is a modal dialog with iOS-style presentation. You can add any content here including forms, lists, or other components.' },
-                ja: { title: '設定', content: 'これはiOS風プレゼンテーションのモーダルダイアログです。フォーム、リスト、その他のコンポーネントなど、任意のコンテンツを追加できます。' }
-            };
-            const msg = messages[currentLanguage];
-            iosUI.showModal({
-                title: msg.title,
-                content: msg.content,
-                size: 'medium'
-            });
+          const messages = {
+            en: { title: 'Settings', content: 'This is a modal dialog with iOS-style presentation. You can add any content here including forms, lists, or other components.' },
+            ja: { title: '設定', content: 'これはiOS風プレゼンテーションのモーダルダイアログです。フォーム、リスト、その他のコンポーネントなど、任意のコンテンツを追加できます。' }
+          };
+          const msg = messages[currentLanguage];
+          iosUI.showModal({
+            title: msg.title,
+            content: msg.content,
+            size: 'medium'
+          });
         }
 
+        // showPopoverDemo 関数を以下に修正：
         function showPopoverDemo(event) {
-            const messages = {
-                en: 'This is a popover! It points to the button you clicked.',
-                ja: 'これはポップオーバーです！クリックしたボタンを指しています。'
-            };
-            iosUI.showPopover({
-                anchor: event.target,
-                content: messages[currentLanguage],
-                direction: 'top',
-                arrow: true
-            });
+          const messages = {
+            en: 'This is a popover! It points to the button you clicked.',
+            ja: 'これはポップオーバーです！クリックしたボタンを指しています。'
+          };
+          iosUI.showPopover({
+            anchor: event.target,
+            content: messages[currentLanguage],
+            direction: 'top',
+            arrow: true
+          });
         }
 
         // Pull to refresh demo
