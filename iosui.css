@@ -1,0 +1,570 @@
+/* iOSUI.css - iOS-like UI Library for Web */
+:root {
+  /* iOS System Colors */
+  --ios-blue: #007aff;
+  --ios-red: #ff3b30;
+  --ios-green: #34c759;
+  --ios-orange: #ff9500;
+  --ios-yellow: #ffcc00;
+  --ios-purple: #af52de;
+  --ios-pink: #ff2d92;
+  --ios-teal: #5ac8fa;
+  --ios-indigo: #5856d6;
+
+  /* iOS Gray Colors */
+  --ios-gray: #8e8e93;
+  --ios-gray2: #aeaeb2;
+  --ios-gray3: #c7c7cc;
+  --ios-gray4: #d1d1d6;
+  --ios-gray5: #e5e5ea;
+  --ios-gray6: #f2f2f7;
+
+  /* Dynamic Colors */
+  --ios-background: #f2f2f7;
+  --ios-card-background: #ffffff;
+  --ios-text-primary: #000000;
+  --ios-text-secondary: #6c6c70;
+  --ios-text-tertiary: #8e8e93;
+  --ios-divider: rgba(60, 60, 67, 0.1);
+  --ios-shadow: rgba(0, 0, 0, 0.05);
+  --ios-active-background: rgba(0, 0, 0, 0.05);
+
+  /* Typography */
+  --ios-font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ios-background: #000000;
+    --ios-card-background: #1c1c1e;
+    --ios-text-primary: #ffffff;
+    --ios-text-secondary: #98989e;
+    --ios-text-tertiary: #636366;
+    --ios-divider: rgba(84, 84, 88, 0.65);
+    --ios-shadow: rgba(0, 0, 0, 0.3);
+    --ios-active-background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Base styles */
+.ios-ui {
+  font-family: var(--ios-font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Container */
+.ios-container {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 0;
+  background-color: var(--ios-background);
+  color: var(--ios-text-primary);
+}
+
+/* Header */
+.ios-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--ios-background);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--ios-divider);
+}
+
+.ios-header-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--ios-text-primary);
+}
+
+.ios-header-subtitle {
+  font-size: 13px;
+  color: var(--ios-text-secondary);
+}
+
+/* Buttons */
+.ios-button {
+  background-color: var(--ios-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--ios-font-family);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.ios-button:active {
+  transform: scale(0.96);
+  opacity: 0.8;
+}
+
+.ios-button.secondary {
+  background-color: var(--ios-gray5);
+  color: var(--ios-text-primary);
+}
+
+.ios-button.destructive {
+  background-color: var(--ios-red);
+}
+
+.ios-button.large {
+  padding: 16px 24px;
+  font-size: 17px;
+}
+
+.ios-button.small {
+  padding: 8px 16px;
+  font-size: 13px;
+  min-height: 32px;
+}
+
+/* List */
+.ios-list {
+  background-color: var(--ios-card-background);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px var(--ios-shadow);
+  margin: 16px;
+}
+
+.ios-list-item {
+  padding: 16px;
+  border-bottom: 1px solid var(--ios-divider);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ios-list-item:last-child {
+  border-bottom: none;
+}
+
+.ios-list-item:active {
+  background-color: var(--ios-active-background);
+}
+
+.ios-list-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ios-list-item-title {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ios-text-primary);
+  margin-bottom: 2px;
+}
+
+.ios-list-item-subtitle {
+  font-size: 15px;
+  color: var(--ios-text-secondary);
+}
+
+.ios-list-item-detail {
+  font-size: 13px;
+  color: var(--ios-text-tertiary);
+}
+
+.ios-list-item-chevron {
+  color: var(--ios-gray3);
+  font-size: 14px;
+  margin-left: 8px;
+}
+
+/* Cards */
+.ios-card {
+  background-color: var(--ios-card-background);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px;
+  box-shadow: 0 1px 2px var(--ios-shadow);
+}
+
+.ios-card-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--ios-text-primary);
+}
+
+.ios-card-content {
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--ios-text-secondary);
+}
+
+/* Form Elements */
+.ios-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--ios-gray4);
+  border-radius: 8px;
+  font-family: var(--ios-font-family);
+  font-size: 15px;
+  background-color: var(--ios-card-background);
+  color: var(--ios-text-primary);
+  transition: border-color 0.2s ease;
+}
+
+.ios-input:focus {
+  outline: none;
+  border-color: var(--ios-blue);
+}
+
+.ios-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid var(--ios-gray4);
+  border-radius: 8px;
+  font-family: var(--ios-font-family);
+  font-size: 15px;
+  line-height: 1.4;
+  resize: vertical;
+  background-color: var(--ios-card-background);
+  color: var(--ios-text-primary);
+  transition: border-color 0.2s ease;
+}
+
+.ios-textarea:focus {
+  outline: none;
+  border-color: var(--ios-blue);
+}
+
+/* Dialog/Alert */
+.ios-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.ios-dialog-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ios-dialog {
+  background-color: var(--ios-card-background);
+  border-radius: 14px;
+  max-width: 270px;
+  width: 100%;
+  overflow: hidden;
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+
+.ios-dialog-overlay.show .ios-dialog {
+  transform: scale(1);
+}
+
+.ios-dialog-content {
+  padding: 20px 16px 16px;
+  text-align: center;
+}
+
+.ios-dialog-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--ios-text-primary);
+}
+
+.ios-dialog-message {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ios-text-secondary);
+}
+
+.ios-dialog-actions {
+  border-top: 1px solid var(--ios-divider);
+  display: flex;
+}
+
+.ios-dialog-button {
+  flex: 1;
+  padding: 12px;
+  background: none;
+  border: none;
+  font-family: var(--ios-font-family);
+  font-size: 17px;
+  color: var(--ios-blue);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ios-dialog-button:active {
+  background-color: var(--ios-active-background);
+}
+
+.ios-dialog-button.destructive {
+  color: var(--ios-red);
+}
+
+.ios-dialog-button.primary {
+  font-weight: 600;
+}
+
+.ios-dialog-button + .ios-dialog-button {
+  border-left: 1px solid var(--ios-divider);
+}
+
+/* Action Sheet */
+.ios-action-sheet-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.ios-action-sheet-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.ios-action-sheet {
+  background-color: var(--ios-card-background);
+  border-radius: 14px;
+  max-width: 400px;
+  width: 100%;
+  overflow: hidden;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+}
+
+.ios-action-sheet-overlay.show .ios-action-sheet {
+  transform: translateY(0);
+}
+
+.ios-action-sheet-header {
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--ios-divider);
+}
+
+.ios-action-sheet-title {
+  font-size: 13px;
+  color: var(--ios-text-secondary);
+  margin-bottom: 4px;
+}
+
+.ios-action-sheet-message {
+  font-size: 13px;
+  color: var(--ios-text-tertiary);
+}
+
+.ios-action-sheet-button {
+  width: 100%;
+  padding: 16px;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--ios-divider);
+  font-family: var(--ios-font-family);
+  font-size: 17px;
+  color: var(--ios-blue);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.ios-action-sheet-button:last-child {
+  border-bottom: none;
+}
+
+.ios-action-sheet-button:active {
+  background-color: var(--ios-active-background);
+}
+
+.ios-action-sheet-button.destructive {
+  color: var(--ios-red);
+}
+
+.ios-action-sheet-button.cancel {
+  font-weight: 600;
+  margin-top: 8px;
+  border-radius: 14px;
+  background-color: var(--ios-card-background);
+}
+
+/* Toast */
+.ios-toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  max-width: 300px;
+  text-align: center;
+}
+
+.ios-toast.show {
+  opacity: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+  .ios-toast {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+  }
+}
+
+/* Badge */
+.ios-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  background-color: var(--ios-blue);
+  color: white;
+}
+
+.ios-badge.red {
+  background-color: var(--ios-red);
+}
+
+.ios-badge.green {
+  background-color: var(--ios-green);
+}
+
+.ios-badge.orange {
+  background-color: var(--ios-orange);
+}
+
+.ios-badge.gray {
+  background-color: var(--ios-gray);
+}
+
+/* Section Headers */
+.ios-section-header {
+  padding: 16px 16px 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ios-text-primary);
+  background-color: var(--ios-background);
+  position: sticky;
+  top: 60px;
+  z-index: 90;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.ios-section-subheader {
+  padding: 0 16px 8px;
+  font-size: 13px;
+  color: var(--ios-text-secondary);
+  background-color: var(--ios-background);
+  position: sticky;
+  top: 94px;
+  z-index: 90;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Loading Spinner */
+.ios-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--ios-gray4);
+  border-top-color: var(--ios-blue);
+  border-radius: 50%;
+  animation: ios-spin 1s linear infinite;
+}
+
+@keyframes ios-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Utility Classes */
+.ios-text-center {
+  text-align: center;
+}
+.ios-text-left {
+  text-align: left;
+}
+.ios-text-right {
+  text-align: right;
+}
+
+.ios-mt-1 {
+  margin-top: 8px;
+}
+.ios-mt-2 {
+  margin-top: 16px;
+}
+.ios-mt-3 {
+  margin-top: 24px;
+}
+
+.ios-mb-1 {
+  margin-bottom: 8px;
+}
+.ios-mb-2 {
+  margin-bottom: 16px;
+}
+.ios-mb-3 {
+  margin-bottom: 24px;
+}
+
+.ios-p-1 {
+  padding: 8px;
+}
+.ios-p-2 {
+  padding: 16px;
+}
+.ios-p-3 {
+  padding: 24px;
+}
+
+.ios-hidden {
+  display: none;
+}
+.ios-visible {
+  display: block;
+}

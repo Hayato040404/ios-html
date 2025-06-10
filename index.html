@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOSUI.js - iOS-like UI Library for Web</title>
+    <link rel="stylesheet" href="iosui.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--ios-background);
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--ios-blue), var(--ios-purple));
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .hero p {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 32px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .demo-section {
+            padding: 40px 0;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px;
+        }
+        
+        .demo-card {
+            background: var(--ios-card-background);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .demo-card h3 {
+            margin-bottom: 16px;
+            color: var(--ios-text-primary);
+        }
+        
+        .demo-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .code-block {
+            background: #1a1a1a;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 16px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .installation {
+            background: var(--ios-card-background);
+            margin: 20px;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+            margin: 20px;
+        }
+        
+        .feature-card {
+            background: var(--ios-card-background);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+        
+        .footer {
+            background: var(--ios-card-background);
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 60px;
+            border-top: 1px solid var(--ios-divider);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>iOSUI.js</h1>
+        <p>Beautiful iOS-like UI components for the web</p>
+        <div class="hero-buttons">
+            <button class="ios-button large" onclick="downloadLibrary()">Download Library</button>
+            <button class="ios-button large secondary" onclick="viewDocs()">View Documentation</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="ios-container">
+        <!-- Installation -->
+        <div class="installation">
+            <h2 class="ios-section-header" style="padding: 0; position: static;">🚀 Installation</h2>
+            <p>Include the CSS and JavaScript files in your HTML:</p>
+            <div class="code-block">
+&lt;link rel="stylesheet" href="iosui.css"&gt;
+&lt;script src="iosui.js"&gt;&lt;/script&gt;
+            </div>
+            <p>Or install via npm:</p>
+            <div class="code-block">
+npm install iosui-js
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="ios-section-header">✨ Features</div>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>iOS Design</h3>
+                <p>Pixel-perfect iOS interface components</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌙</div>
+                <h3>Dark Mode</h3>
+                <p>Automatic dark mode support</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3>Lightweight</h3>
+                <p>Small bundle size, no dependencies</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Fast</h3>
+                <p>Optimized for performance</p>
+            </div>
+        </div>
+
+        <!-- Demo Section -->
+        <div class="ios-section-header">🎮 Interactive Demo</div>
+        <div class="demo-grid">
+            <!-- Dialogs Demo -->
+            <div class="demo-card">
+                <h3>Dialogs & Alerts</h3>
+                <div class="demo-buttons">
+                    <button class="ios-button" onclick="showAlertDemo()">Show Alert</button>
+                    <button class="ios-button" onclick="showConfirmDemo()">Show Confirm</button>
+                    <button class="ios-button secondary" onclick="showActionSheetDemo()">Action Sheet</button>
+                </div>
+            </div>
+
+            <!-- Buttons Demo -->
+            <div class="demo-card">
+                <h3>Buttons</h3>
+                <div class="demo-buttons">
+                    <button class="ios-button">Primary Button</button>
+                    <button class="ios-button secondary">Secondary Button</button>
+                    <button class="ios-button destructive">Destructive Button</button>
+                    <button class="ios-button small">Small Button</button>
+                </div>
+            </div>
+
+            <!-- Toast Demo -->
+            <div class="demo-card">
+                <h3>Toast Notifications</h3>
+                <div class="demo-buttons">
+                    <button class="ios-button" onclick="showToastDemo()">Show Toast</button>
+                    <button class="ios-button secondary" onclick="showLongToastDemo()">Long Toast</button>
+                </div>
+            </div>
+
+            <!-- Form Demo -->
+            <div class="demo-card">
+                <h3>Form Elements</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <input class="ios-input" placeholder="Text Input" />
+                    <textarea class="ios-textarea" placeholder="Textarea"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- List Demo -->
+        <div class="ios-section-header">📋 List Components</div>
+        <div id="demoList"></div>
+
+        <!-- Cards Demo -->
+        <div class="ios-section-header">🃏 Card Components</div>
+        <div id="demoCards"></div>
+
+        <!-- Documentation -->
+        <div class="ios-section-header">📚 Documentation</div>
+        
+        <div class="ios-card">
+            <div class="ios-card-title">Basic Usage</div>
+            <div class="ios-card-content">
+                <p>iOSUI.js provides both CSS classes and JavaScript methods for creating iOS-like interfaces.</p>
+            </div>
+        </div>
+
+        <div class="ios-card">
+            <div class="ios-card-title">CSS Classes</div>
+            <div class="ios-card-content">
+                <div class="code-block">
+&lt;div class="ios-container"&gt;
+  &lt;div class="ios-header"&gt;
+    &lt;h1 class="ios-header-title"&gt;My App&lt;/h1&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="ios-list"&gt;
+    &lt;div class="ios-list-item"&gt;
+      &lt;div class="ios-list-item-content"&gt;
+        &lt;div class="ios-list-item-title"&gt;List Item&lt;/div&gt;
+        &lt;div class="ios-list-item-subtitle"&gt;Subtitle&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;span class="ios-list-item-chevron"&gt;›&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+                </div>
+            </div>
+        </div>
+
+        <div class="ios-card">
+            <div class="ios-card-title">JavaScript API</div>
+            <div class="ios-card-content">
+                <div class="code-block">
+// Show alert
+iosAlert('Title', 'Message');
+
+// Show confirm dialog
+iosConfirm('Confirm', 'Are you sure?').then(confirmed => {
+  if (confirmed) {
+    console.log('User confirmed');
+  }
+});
+
+// Show toast
+iosToast('Hello World!');
+
+// Show action sheet
+iosActionSheet({
+  title: 'Choose an option',
+  buttons: [
+    { text: 'Option 1' },
+    { text: 'Option 2' },
+    { text: 'Delete', style: 'destructive' }
+  ]
+}).then(index => {
+  console.log('Selected option:', index);
+});
+                </div>
+            </div>
+        </div>
+
+        <div class="ios-card">
+            <div class="ios-card-title">Available Components</div>
+            <div class="ios-card-content">
+                <div class="ios-list" style="margin: 16px 0;">
+                    <div class="ios-list-item">
+                        <div class="ios-list-item-content">
+                            <div class="ios-list-item-title">Buttons</div>
+                            <div class="ios-list-item-detail">Primary, Secondary, Destructive styles</div>
+                        </div>
+                    </div>
+                    <div class="ios-list-item">
+                        <div class="ios-list-item-content">
+                            <div class="ios-list-item-title">Dialogs & Alerts</div>
+                            <div class="ios-list-item-detail">Native-like modal dialogs</div>
+                        </div>
+                    </div>
+                    <div class="ios-list-item">
+                        <div class="ios-list-item-content">
+                            <div class="ios-list-item-title">Action Sheets</div>
+                            <div class="ios-list-item-detail">Bottom slide-up menus</div>
+                        </div>
+                    </div>
+                    <div class="ios-list-item">
+                        <div class="ios-list-item-content">
+                            <div class="ios-list-item-title">Lists</div>
+                            <div class="ios-list-item-detail">iOS-style list components</div>
+                        </div>
+                    </div>
+                    <div class="ios-list-item">
+                        <div class="ios-list-item-content">
+                            <div class="ios-list-item-title">Cards</div>
+                            <div class="ios-list-item-detail">Content containers</div>
+                        </div>
+                    </div>
+                    <div class="ios-list-item">
+                        <div class="ios-list-item-content">
+                            <div class="ios-list-item-title">Form Elements</div>
+                            <div class="ios-list-item-detail">Inputs, textareas, and more</div>
+                        </div>
+                    </div>
+                    <div class="ios-list-item">
+                        <div class="ios-list-item-content">
+                            <div class="ios-list-item-title">Toast Notifications</div>
+                            <div class="ios-list-item-detail">Temporary message overlays</div>
+                        </div>
+                    </div>
+                    <div class="ios-list-item">
+                        <div class="ios-list-item-content">
+                            <div class="ios-list-item-title">Badges</div>
+                            <div class="ios-list-item-detail">Status indicators</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Made with ❤️ for the web</p>
+        <p>iOSUI.js - Bringing iOS design to every platform</p>
+        <div style="margin-top: 20px;">
+            <button class="ios-button" onclick="window.open('https://github.com/yourusername/iosui-js')">
+                View on GitHub
+            </button>
+        </div>
+    </div>
+
+    <script src="iosui.js"></script>
+    <script>
+        // Demo functions
+        function showAlertDemo() {
+            iosAlert('Hello!', 'This is an iOS-style alert dialog. Notice how it looks native on any platform!');
+        }
+
+        function showConfirmDemo() {
+            iosConfirm('Confirm Action', 'Do you want to proceed with this action?').then(confirmed => {
+                if (confirmed) {
+                    iosToast('You confirmed the action!');
+                } else {
+                    iosToast('Action cancelled');
+                }
+            });
+        }
+
+        function showActionSheetDemo() {
+            iosActionSheet({
+                title: 'Choose an action',
+                message: 'What would you like to do?',
+                buttons: [
+                    { text: 'Share' },
+                    { text: 'Copy Link' },
+                    { text: 'Save to Photos' },
+                    { text: 'Delete', style: 'destructive' }
+                ]
+            }).then(index => {
+                if (index >= 0) {
+                    const actions = ['Share', 'Copy Link', 'Save to Photos', 'Delete'];
+                    iosToast(`Selected: ${actions[index]}`);
+                }
+            });
+        }
+
+        function showToastDemo() {
+            iosToast('Hello from iOS Toast! 👋');
+        }
+
+        function showLongToastDemo() {
+            iosToast('This is a longer toast message that demonstrates how text wraps in the toast component.', 4000);
+        }
+
+        function downloadLibrary() {
+            iosActionSheet({
+                title: 'Download iOSUI.js',
+                buttons: [
+                    { text: 'Download CSS + JS' },
+                    { text: 'View on GitHub' },
+                    { text: 'Copy CDN Link' }
+                ]
+            }).then(index => {
+                switch(index) {
+                    case 0:
+                        iosToast('Download started!');
+                        break;
+                    case 1:
+                        iosToast('Opening GitHub...');
+                        break;
+                    case 2:
+                        iosToast('CDN link copied!');
+                        break;
+                }
+            });
+        }
+
+        function viewDocs() {
+            iosToast('Documentation is right here on this page! 📚');
+        }
+
+        // Initialize demo content
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create demo list
+            const demoList = iosUI.createList([
+                {
+                    title: 'Settings',
+                    subtitle: 'App preferences and configuration',
+                    onClick: () => iosToast('Settings clicked!')
+                },
+                {
+                    title: 'Notifications',
+                    subtitle: 'Manage your notifications',
+                    detail: 'On',
+                    onClick: () => iosToast('Notifications clicked!')
+                },
+                {
+                    title: 'Privacy',
+                    subtitle: 'Control your privacy settings',
+                    onClick: () => iosToast('Privacy clicked!')
+                },
+                {
+                    title: 'About',
+                    subtitle: 'App information and version',
+                    chevron: false,
+                    onClick: () => iosAlert('About', 'iOSUI.js v1.0.0\nMade with ❤️ for the web')
+                }
+            ]);
+            document.getElementById('demoList').appendChild(demoList);
+
+            // Create demo cards
+            const cardsContainer = document.getElementById('demoCards');
+            
+            const infoCard = iosUI.createCard({
+                title: 'Information Card',
+                content: 'This is an example of an iOS-style card component. Cards are great for grouping related content together.'
+            });
+            cardsContainer.appendChild(infoCard);
+
+            const statsCard = iosUI.createCard({
+                title: 'Statistics',
+                content: 'You can put any content inside cards, including other components, images, or custom HTML.'
+            });
+            cardsContainer.appendChild(statsCard);
+        });
+    </script>
+</body>
+</html>
