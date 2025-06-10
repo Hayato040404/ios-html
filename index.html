@@ -1276,1039 +1276,989 @@ git clone https://github.com/Hayato040404/ios-html.git
 
     <script src="iosui.js"></script>
     <script>
-        // Internationalization
-        const translations = {
+    // Navigation functions - 最初に定義
+    function scrollToDemo() {
+        document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    function scrollToQuickStart() {
+        document.getElementById('quickstart').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Demo functions - 早期に定義
+    function showAlertDemo() {
+        const messages = {
+            en: { title: 'Hello! 👋', message: 'This is a beautiful iOS-style alert that works on any platform! Notice the smooth animations and native feel.' },
+            ja: { title: 'こんにちは！ 👋', message: 'これはあらゆるプラットフォームで動作する美しいiOS風アラートです！スムーズなアニメーションとネイティブな感覚に注目してください。' }
+        };
+        const msg = messages[currentLanguage];
+        iosAlert(msg.title, msg.message);
+    }
+
+    function showConfirmDemo() {
+        const messages = {
+            en: { title: 'Confirm Action', message: 'Do you want to proceed with this action? This demonstrates a confirmation dialog.', confirmed: 'Action confirmed! ✅', cancelled: 'Action cancelled' },
+            ja: { title: 'アクション確認', message: 'このアクションを実行しますか？これは確認ダイアログのデモです。', confirmed: 'アクションが確認されました！ ✅', cancelled: 'アクションがキャンセルされました' }
+        };
+        const msg = messages[currentLanguage];
+        iosConfirm(msg.title, msg.message).then(confirmed => {
+            if (confirmed) {
+                iosToast(msg.confirmed);
+                iosHaptic('success');
+            } else {
+                iosToast(msg.cancelled);
+                iosHaptic('light');
+            }
+        });
+    }
+
+    function showPromptDemo() {
+        const messages = {
+            en: { title: 'Enter Your Name', message: 'What should we call you?', placeholder: 'Your name here', hello: 'Hello, {name}! 👋 Welcome to iOSUI.js!', noName: 'No name entered' },
+            ja: { title: 'お名前を入力', message: 'なんとお呼びすればよろしいですか？', placeholder: 'ここにお名前を', hello: 'こんにちは、{name}さん！ 👋 iOSUI.jsへようこそ！', noName: '名前が入力されませんでした' }
+        };
+        const msg = messages[currentLanguage];
+        iosPrompt(msg.title, msg.message, msg.placeholder).then(name => {
+            if (name && name.trim()) {
+                iosToast(msg.hello.replace('{name}', name));
+                iosHaptic('success');
+            } else if (name === '') {
+                iosToast(msg.noName);
+            }
+        });
+    }
+
+    function showActionSheetDemo() {
+        const messages = {
             en: {
-                'hero.title': 'iOSUI.js',
-                'hero.subtitle': 'Beautiful iOS-like UI for the Web',
-                'hero.description': 'Create stunning, native-looking iOS interfaces that work perfectly on any platform. Bring the elegance of iOS design to your web applications with smooth animations and intuitive interactions.',
-                'hero.tryDemo': 'Try Interactive Demo',
-                'hero.quickStart': 'Quick Start Guide',
-                'hero.github': 'View on GitHub',
-                'stats.components': 'Components',
-                'stats.size': 'Minified + Gzipped',
-                'stats.downloads': 'Downloads',
-                'stats.coverage': 'Test Coverage',
-                'features.title': 'Why Choose iOSUI.js?',
-                'features.subtitle': 'Built with modern web standards and iOS design principles in mind',
-                'features.design.title': 'Pixel-Perfect Design',
-                'features.design.description': 'Meticulously crafted to match iOS design guidelines with attention to every detail',
-                'features.darkMode.title': 'Dark Mode Ready',
-                'features.darkMode.description': 'Automatic dark/light mode support with system preference detection',
-                'features.mobile.title': 'Mobile-First',
-                'features.mobile.description': 'Optimized for touch interactions with haptic feedback and smooth animations',
-                'features.performance.title': 'High Performance',
-                'features.performance.description': 'Zero dependencies, tree-shakable, and optimized for 60fps animations',
-                'features.i18n.title': 'Internationalization',
-                'features.i18n.description': 'Built-in support for multiple languages and RTL layouts',
-                'features.accessibility.title': 'Accessibility',
-                'features.accessibility.description': 'WCAG 2.1 compliant with full keyboard navigation and screen reader support',
-                'demo.title': 'Interactive Demo',
-                'demo.subtitle': 'Experience all the components in action. Click, tap, and interact with real iOS-style elements.',
-                'demo.dialogs.title': 'Dialogs & Alerts',
-                'demo.dialogs.description': 'Native-looking dialogs that work across all platforms with smooth animations.',
-                'demo.dialogs.alert': 'Show Alert',
-                'demo.dialogs.confirm': 'Show Confirm',
-                'demo.dialogs.prompt': 'Show Prompt',
-                'demo.dialogs.actionSheet': 'Action Sheet',
-                'demo.notifications.title': 'Notifications',
-                'demo.notifications.description': 'Toast messages, banners, and in-app notifications with customizable positions.',
-                'demo.notifications.toast': 'Show Toast',
-                'demo.notifications.banner': 'Show Banner',
-                'demo.notifications.inApp': 'In-App Notification',
-                'demo.notifications.area': 'Notifications will appear here',
-                'demo.forms.title': 'Form Controls',
-                'demo.forms.description': 'iOS-style switches, segmented controls, sliders, and steppers with smooth animations.',
-                'demo.forms.notifications': 'Enable notifications',
-                'demo.forms.darkMode': 'Dark mode',
-                'demo.forms.volume': 'Volume',
-                'demo.forms.quantity': 'Quantity',
-                'demo.progress.title': 'Progress Indicators',
-                'demo.progress.description': 'Progress bars, activity indicators, and circular progress with smooth animations.',
-                'demo.progress.linear': 'Linear Progress',
-                'demo.progress.circular': 'Circular Progress',
-                'demo.progress.activity': 'Activity Indicator',
-                'demo.progress.animate': 'Animate Progress',
-                'demo.progress.toggle': 'Toggle Activity',
-                'demo.pickers.title': 'Pickers',
-                'demo.pickers.description': 'Date pickers, time pickers, and custom pickers with native iOS feel.',
-                'demo.pickers.date': 'Show Date Picker',
-                'demo.pickers.custom': 'Show Custom Picker',
-                'demo.lists.title': 'Lists',
-                'demo.lists.description': 'iOS-style lists with various accessories and interactive elements.',
-                'demo.navigation.title': 'Navigation',
-                'demo.navigation.description': 'Navigation bars and tab bars for app-like experiences.',
-                'demo.navigation.content': 'Home content is displayed here',
-                'demo.contextMenu.title': 'Context Menu',
-                'demo.contextMenu.description': 'Right-click context menus with iOS-style animations.',
-                'demo.contextMenu.instruction': 'Right-click or long-press here to show context menu',
-                'demo.pullRefresh.title': 'Pull to Refresh',
-                'demo.pullRefresh.description': 'Native-style pull-to-refresh functionality.',
-                'demo.pullRefresh.instruction': 'Pull down to refresh this content',
-                'demo.pullRefresh.lastUpdated': 'Last updated:',
-                'demo.pullRefresh.never': 'Never',
-                'demo.search.title': 'Search & Modals',
-                'demo.search.description': 'Search bars, modals, and popovers for enhanced user interaction.',
-                'demo.search.modal': 'Show Modal',
-                'demo.search.popover': 'Show Popover',
-                'quickStart.title': 'Quick Start Guide',
-                'quickStart.subtitle': 'Get started with iOSUI.js in just a few simple steps',
-                'quickStart.step1.title': 'Download',
-                'quickStart.step1.description': 'Clone or download the library from GitHub',
-                'quickStart.step2.title': 'Include',
-                'quickStart.step2.description': 'Add CSS and JS files to your HTML',
-                'quickStart.step3.title': 'Create',
-                'quickStart.step3.description': 'Start building beautiful iOS interfaces',
-                'footer.title': 'Ready to Build?',
-                'footer.description': 'Join thousands of developers creating beautiful iOS-like experiences on the web',
-                'footer.star': 'Star on GitHub',
-                'footer.tryDemo': 'Try Demo',
-                'footer.support': 'Get Support',
-                'footer.copyright': '© 2024 iOSUI.js. Made with ❤️ for the web community.'
+                title: 'Choose an action',
+                message: 'What would you like to do? This demonstrates an action sheet with icons.',
+                buttons: [
+                    { text: 'Share', icon: '📤' },
+                    { text: 'Copy Link', icon: '🔗' },
+                    { text: 'Save to Photos', icon: '📷' },
+                    { text: 'Report', icon: '⚠️' },
+                    { text: 'Delete', style: 'destructive', icon: '🗑️' }
+                ],
+                actions: ['Share', 'Copy Link', 'Save to Photos', 'Report', 'Delete'],
+                selected: 'Selected: {action}'
             },
             ja: {
-                'hero.title': 'iOSUI.js',
-                'hero.subtitle': 'ウェブ向けの美しいiOS風UI',
-                'hero.description': 'あらゆるプラットフォームで完璧に動作する、ネイティブのようなiOSインターフェースを作成できます。スムーズなアニメーションと直感的なインタラクションで、iOSデザインの優雅さをウェブアプリケーションに取り入れましょう。',
-                'hero.tryDemo': 'インタラクティブデモを試す',
-                'hero.quickStart': 'クイックスタートガイド',
-                'hero.github': 'GitHubで見る',
-                'stats.components': 'コンポーネント',
-                'stats.size': '圧縮済み',
-                'stats.downloads': 'ダウンロード数',
-                'stats.coverage': 'テストカバレッジ',
-                'features.title': 'なぜiOSUI.jsを選ぶのか？',
-                'features.subtitle': 'モダンなウェブ標準とiOSデザイン原則を念頭に構築',
-                'features.design.title': 'ピクセルパーフェクトデザイン',
-                'features.design.description': 'iOSデザインガイドラインに合わせて細部まで丁寧に作られています',
-                'features.darkMode.title': 'ダークモード対応',
-                'features.darkMode.description': 'システム設定の検出による自動ダーク/ライトモードサポート',
-                'features.mobile.title': 'モバイルファースト',
-                'features.mobile.description': 'ハプティックフィードバックとスムーズなアニメーションでタッチ操作に最適化',
-                'features.performance.title': '高性能',
-                'features.performance.description': '依存関係なし、ツリーシェイキング対応、60fpsアニメーション最適化',
-                'features.i18n.title': '国際化対応',
-                'features.i18n.description': '複数言語とRTLレイアウトの組み込みサポート',
-                'features.accessibility.title': 'アクセ  '複数言語とRTLレイアウトの組み込みサポート',
-                'features.accessibility.title': 'アクセシビリティ',
-                'features.accessibility.description': 'WCAG 2.1準拠、完全なキーボードナビゲーションとスクリーンリーダーサポート',
-                'demo.title': 'インタラクティブデモ',
-                'demo.subtitle': 'すべてのコンポーネントを実際に体験してください。本物のiOS風要素をクリック、タップ、操作できます。',
-                'demo.dialogs.title': 'ダイアログ・アラート',
-                'demo.dialogs.description': 'スムーズなアニメーションで全プラットフォームで動作するネイティブ風ダイアログ。',
-                'demo.dialogs.alert': 'アラート表示',
-                'demo.dialogs.confirm': '確認ダイアログ',
-                'demo.dialogs.prompt': 'プロンプト表示',
-                'demo.dialogs.actionSheet': 'アクションシート',
-                'demo.notifications.title': '通知',
-                'demo.notifications.description': 'カスタマイズ可能な位置でのトーストメッセージ、バナー、アプリ内通知。',
-                'demo.notifications.toast': 'トースト表示',
-                'demo.notifications.banner': 'バナー表示',
-                'demo.notifications.inApp': 'アプリ内通知',
-                'demo.notifications.area': 'ここに通知が表示されます',
-                'demo.forms.title': 'フォームコントロール',
-                'demo.forms.description': 'スムーズなアニメーションのiOS風スイッチ、セグメントコントロール、スライダー、ステッパー。',
-                'demo.forms.notifications': '通知を有効にする',
-                'demo.forms.darkMode': 'ダークモード',
-                'demo.forms.volume': '音量',
-                'demo.forms.quantity': '数量',
-                'demo.progress.title': 'プログレスインジケーター',
-                'demo.progress.description': 'スムーズなアニメーションのプログレスバー、アクティビティインジケーター、円形プログレス。',
-                'demo.progress.linear': 'リニアプログレス',
-                'demo.progress.circular': '円形プログレス',
-                'demo.progress.activity': 'アクティビティインジケーター',
-                'demo.progress.animate': 'プログレスアニメーション',
-                'demo.progress.toggle': 'アクティビティ切り替え',
-                'demo.pickers.title': 'ピッカー',
-                'demo.pickers.description': 'ネイティブiOS感覚の日付ピッカー、時間ピッカー、カスタムピッカー。',
-                'demo.pickers.date': '日付ピッカー表示',
-                'demo.pickers.custom': 'カスタムピッカー表示',
-                'demo.lists.title': 'リスト',
-                'demo.lists.description': '様々なアクセサリーとインタラクティブ要素を持つiOS風リスト。',
-                'demo.navigation.title': 'ナビゲーション',
-                'demo.navigation.description': 'アプリのような体験のためのナビゲーションバーとタブバー。',
-                'demo.navigation.content': 'ホームコンテンツがここに表示されます',
-                'demo.contextMenu.title': 'コンテキストメニュー',
-                'demo.contextMenu.description': 'iOS風アニメーションの右クリックコンテキストメニュー。',
-                'demo.contextMenu.instruction': 'ここを右クリックまたは長押ししてコンテキストメニューを表示',
-                'demo.pullRefresh.title': 'プルトゥリフレッシュ',
-                'demo.pullRefresh.description': 'ネイティブ風プルトゥリフレッシュ機能。',
-                'demo.pullRefresh.instruction': 'このコンテンツを更新するために下に引っ張ってください',
-                'demo.pullRefresh.lastUpdated': '最終更新:',
-                'demo.pullRefresh.never': 'なし',
-                'demo.search.title': '検索・モーダル',
-                'demo.search.description': 'ユーザーインタラクション向上のための検索バー、モーダル、ポップオーバー。',
-                'demo.search.modal': 'モーダル表示',
-                'demo.search.popover': 'ポップオーバー表示',
-                'quickStart.title': 'クイックスタートガイド',
-                'quickStart.subtitle': 'わずか数ステップでiOSUI.jsを始められます',
-                'quickStart.step1.title': 'ダウンロード',
-                'quickStart.step1.description': 'GitHubからライブラリをクローンまたはダウンロード',
-                'quickStart.step2.title': '読み込み',
-                'quickStart.step2.description': 'HTMLにCSSとJSファイルを追加',
-                'quickStart.step3.title': '作成',
-                'quickStart.step3.description': '美しいiOSインターフェースの構築を開始',
-                'footer.title': '構築の準備はできましたか？',
-                'footer.description': 'ウェブで美しいiOS風体験を作成している何千人もの開発者に参加しましょう',
-                'footer.star': 'GitHubでスター',
-                'footer.tryDemo': 'デモを試す',
-                'footer.support': 'サポートを受ける',
-                'footer.copyright': '© 2024 iOSUI.js. ウェブコミュニティのために❤️で作られました。'
+                title: 'アクションを選択',
+                message: '何をしますか？これはアイコン付きアクションシートのデモです。',
+                buttons: [
+                    { text: '共有', icon: '📤' },
+                    { text: 'リンクをコピー', icon: '🔗' },
+                    { text: '写真に保存', icon: '📷' },
+                    { text: '報告', icon: '⚠️' },
+                    { text: '削除', style: 'destructive', icon: '🗑️' }
+                ],
+                actions: ['共有', 'リンクをコピー', '写真に保存', '報告', '削除'],
+                selected: '選択: {action}'
             }
         };
-
-        let currentLanguage = 'en';
-
-        function setLanguage(lang) {
-            currentLanguage = lang;
-            document.documentElement.lang = lang;
-            
-            // Update all elements with data-i18n attribute
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    element.textContent = translations[lang][key];
-                }
-            });
-            
-            // Update language buttons
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
-            });
-            
-            // Store preference
-            localStorage.setItem('iosui-language', lang);
-        }
-
-        // Language switcher
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                setLanguage(btn.getAttribute('data-lang'));
-            });
+        const msg = messages[currentLanguage];
+        iosActionSheet(msg).then(index => {
+            if (index >= 0) {
+                iosToast(msg.selected.replace('{action}', msg.actions[index]));
+                iosHaptic('medium');
+            }
         });
+    }
 
-        // Load saved language preference
-        const savedLanguage = localStorage.getItem('iosui-language') || 'en';
-        setLanguage(savedLanguage);
+    function showToastDemo() {
+        const messages = {
+            en: 'Hello from iOS Toast! 👋',
+            ja: 'iOSトーストからこんにちは！ 👋'
+        };
+        iosToast(messages[currentLanguage]);
+    }
 
-        // Navigation functions
-        function scrollToDemo() {
-            document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
-        }
+    function showBannerDemo() {
+        const messages = {
+            en: { title: 'New Message', message: 'You have received a new message from John' },
+            ja: { title: '新しいメッセージ', message: 'ジョンから新しいメッセージが届きました' }
+        };
+        const msg = messages[currentLanguage];
+        iosUI.showBanner({
+            title: msg.title,
+            message: msg.message,
+            icon: '💬',
+            duration: 5000,
+            onClick: () => {
+                const clickMessages = {
+                    en: 'Banner clicked! 📱',
+                    ja: 'バナーがクリックされました！ 📱'
+                };
+                iosToast(clickMessages[currentLanguage]);
+            }
+        });
+    }
+
+    function showInAppNotification() {
+        const messages = {
+            en: { title: 'Download Complete', message: 'Your file has been downloaded successfully', open: 'Open', dismiss: 'Dismiss' },
+            ja: { title: 'ダウンロード完了', message: 'ファイルが正常にダウンロードされました', open: '開く', dismiss: '閉じる' }
+        };
+        const msg = messages[currentLanguage];
+        iosUI.showNotification({
+            title: msg.title,
+            message: msg.message,
+            type: 'success',
+            actions: [
+                { text: msg.open, onClick: () => iosToast('File opened! 📁') },
+                { text: msg.dismiss, style: 'cancel' }
+            ]
+        });
+    }
+
+    // Progress demo functions
+    let progressValue = 0;
+    let activityVisible = false;
+
+    function animateProgress() {
+        const progressBar = document.querySelector('#demoProgressBar .ios-progress-bar');
+        const circularProgress = document.querySelector('#demoCircularProgress .ios-circular-progress');
         
-        function scrollToQuickStart() {
-            document.getElementById('quickstart').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Demo functions
-        function showAlertDemo() {
-            const messages = {
-                en: { title: 'Hello! 👋', message: 'This is a beautiful iOS-style alert that works on any platform! Notice the smooth animations and native feel.' },
-                ja: { title: 'こんにちは！ 👋', message: 'これはあらゆるプラットフォームで動作する美しいiOS風アラートです！スムーズなアニメーションとネイティブな感覚に注目してください。' }
-            };
-            const msg = messages[currentLanguage];
-            iosAlert(msg.title, msg.message);
-        }
-
-        function showConfirmDemo() {
-            const messages = {
-                en: { title: 'Confirm Action', message: 'Do you want to proceed with this action? This demonstrates a confirmation dialog.', confirmed: 'Action confirmed! ✅', cancelled: 'Action cancelled' },
-                ja: { title: 'アクション確認', message: 'このアクションを実行しますか？これは確認ダイアログのデモです。', confirmed: 'アクションが確認されました！ ✅', cancelled: 'アクションがキャンセルされました' }
-            };
-            const msg = messages[currentLanguage];
-            iosConfirm(msg.title, msg.message).then(confirmed => {
-                if (confirmed) {
-                    iosToast(msg.confirmed);
-                    iosHaptic('success');
-                } else {
-                    iosToast(msg.cancelled);
-                    iosHaptic('light');
-                }
-            });
-        }
-
-        function showPromptDemo() {
-            const messages = {
-                en: { title: 'Enter Your Name', message: 'What should we call you?', placeholder: 'Your name here', hello: 'Hello, {name}! 👋 Welcome to iOSUI.js!', noName: 'No name entered' },
-                ja: { title: 'お名前を入力', message: 'なんとお呼びすればよろしいですか？', placeholder: 'ここにお名前を', hello: 'こんにちは、{name}さん！ 👋 iOSUI.jsへようこそ！', noName: '名前が入力されませんでした' }
-            };
-            const msg = messages[currentLanguage];
-            iosPrompt(msg.title, msg.message, msg.placeholder).then(name => {
-                if (name && name.trim()) {
-                    iosToast(msg.hello.replace('{name}', name));
-                    iosHaptic('success');
-                } else if (name === '') {
-                    iosToast(msg.noName);
-                }
-            });
-        }
-
-        function showActionSheetDemo() {
-            const messages = {
-                en: {
-                    title: 'Choose an action',
-                    message: 'What would you like to do? This demonstrates an action sheet with icons.',
-                    buttons: [
-                        { text: 'Share', icon: '📤' },
-                        { text: 'Copy Link', icon: '🔗' },
-                        { text: 'Save to Photos', icon: '📷' },
-                        { text: 'Report', icon: '⚠️' },
-                        { text: 'Delete', style: 'destructive', icon: '🗑️' }
-                    ],
-                    actions: ['Share', 'Copy Link', 'Save to Photos', 'Report', 'Delete'],
-                    selected: 'Selected: {action}'
-                },
-                ja: {
-                    title: 'アクションを選択',
-                    message: '何をしますか？これはアイコン付きアクションシートのデモです。',
-                    buttons: [
-                        { text: '共有', icon: '📤' },
-                        { text: 'リンクをコピー', icon: '🔗' },
-                        { text: '写真に保存', icon: '📷' },
-                        { text: '報告', icon: '⚠️' },
-                        { text: '削除', style: 'destructive', icon: '🗑️' }
-                    ],
-                    actions: ['共有', 'リンクをコピー', '写真に保存', '報告', '削除'],
-                    selected: '選択: {action}'
-                }
-            };
-            const msg = messages[currentLanguage];
-            iosActionSheet(msg).then(index => {
-                if (index >= 0) {
-                    iosToast(msg.selected.replace('{action}', msg.actions[index]));
-                    iosHaptic('medium');
-                }
-            });
-        }
-
-        function showToastDemo() {
-            const messages = {
-                en: 'Hello from iOS Toast! 👋',
-                ja: 'iOSトーストからこんにちは！ 👋'
-            };
-            iosToast(messages[currentLanguage]);
-        }
-
-        function showBannerDemo() {
-            const messages = {
-                en: { title: 'New Message', message: 'You have received a new message from John' },
-                ja: { title: '新しいメッセージ', message: 'ジョンから新しいメッセージが届きました' }
-            };
-            const msg = messages[currentLanguage];
-            iosUI.showBanner({
-                title: msg.title,
-                message: msg.message,
-                icon: '💬',
-                duration: 5000,
-                onClick: () => {
-                    const clickMessages = {
-                        en: 'Banner clicked! 📱',
-                        ja: 'バナーがクリックされました！ 📱'
-                    };
-                    iosToast(clickMessages[currentLanguage]);
-                }
-            });
-        }
-
-        function showInAppNotification() {
-            const messages = {
-                en: { title: 'Download Complete', message: 'Your file has been downloaded successfully', open: 'Open', dismiss: 'Dismiss' },
-                ja: { title: 'ダウンロード完了', message: 'ファイルが正常にダウンロードされました', open: '開く', dismiss: '閉じる' }
-            };
-            const msg = messages[currentLanguage];
-            iosUI.showNotification({
-                title: msg.title,
-                message: msg.message,
-                type: 'success',
-                actions: [
-                    { text: msg.open, onClick: () => iosToast('File opened! 📁') },
-                    { text: msg.dismiss, style: 'cancel' }
-                ]
-            });
-        }
-
-        // Progress demo functions
-        let progressValue = 0;
-        let activityVisible = false;
-
-        function animateProgress() {
-            const progressBar = document.querySelector('#demoProgressBar .ios-progress-bar');
-            const circularProgress = document.querySelector('#demoCircularProgress .ios-circular-progress');
-            
-            if (progressBar && circularProgress) {
-                progressValue = 0;
-                const interval = setInterval(() => {
-                    progressValue += 0.02;
-                    iosUI.updateProgress(progressBar, progressValue);
-                    iosUI.updateCircularProgress(circularProgress, progressValue);
-                    
-                    if (progressValue >= 1) {
-                        clearInterval(interval);
-                        const messages = {
-                            en: 'Progress complete! 🎉',
-                            ja: 'プログレス完了！ 🎉'
-                        };
-                        iosToast(messages[currentLanguage]);
-                    }
-                }, 50);
-            }
-        }
-
-        function toggleActivity() {
-            const activityIndicator = document.querySelector('#demoActivityIndicator .ios-activity-indicator');
-            if (activityIndicator) {
-                activityVisible = !activityVisible;
-                if (activityVisible) {
-                    iosUI.showActivityIndicator(activityIndicator);
-                } else {
-                    iosUI.hideActivityIndicator(activityIndicator);
-                }
-            }
-        }
-
-        // Picker demo functions
-        function showDatePicker() {
-            const messages = {
-                en: 'Date selected: {date}',
-                ja: '選択された日付: {date}'
-            };
-            iosUI.showDatePicker({
-                mode: 'date',
-                value: new Date(),
-                onSelect: (date) => {
-                    const msg = messages[currentLanguage];
-                    iosToast(msg.replace('{date}', date.toLocaleDateString()));
-                }
-            });
-        }
-
-        function showCustomPicker() {
-            const options = {
-                en: {
-                    columns: [['Small', 'Medium', 'Large'], ['Red', 'Green', 'Blue']],
-                    message: 'Selected: {size}, {color}'
-                },
-                ja: {
-                    columns: [['小', '中', '大'], ['赤', '緑', '青']],
-                    message: '選択: {size}, {color}'
-                }
-            };
-            const opt = options[currentLanguage];
-            iosUI.showPicker({
-                columns: opt.columns,
-                selectedIndexes: [0, 0],
-                onSelect: (indexes, values) => {
-                    const msg = opt.message.replace('{size}', values[0]).replace('{color}', values[1]);
-                    iosToast(msg);
-                }
-            });
-        }
-
-        // Modal and popover demos
-        function showModalDemo() {
-            const messages = {
-                en: { title: 'Settings', content: 'This is a modal dialog with iOS-style presentation. You can add any content here including forms, lists, or other components.' },
-                ja: { title: '設定', content: 'これはiOS風プレゼンテーションのモーダルダイアログです。フォーム、リスト、その他のコンポーネントなど、任意のコンテンツを追加できます。' }
-            };
-            const msg = messages[currentLanguage];
-            iosUI.showModal({
-                title: msg.title,
-                content: msg.content,
-                size: 'medium'
-            });
-        }
-
-        function showPopoverDemo(event) {
-            const messages = {
-                en: 'This is a popover! It points to the button you clicked.',
-                ja: 'これはポップオーバーです！クリックしたボタンを指しています。'
-            };
-            iosUI.showPopover({
-                anchor: event.target,
-                content: messages[currentLanguage],
-                direction: 'top',
-                arrow: true
-            });
-        }
-
-        // Pull to refresh demo
-        function refreshDemo() {
-            return new Promise(resolve => {
-                setTimeout(() => {
-                    document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+        if (progressBar && circularProgress) {
+            progressValue = 0;
+            const interval = setInterval(() => {
+                progressValue += 0.02;
+                iosUI.updateProgress(progressBar, progressValue);
+                iosUI.updateCircularProgress(circularProgress, progressValue);
+                
+                if (progressValue >= 1) {
+                    clearInterval(interval);
                     const messages = {
-                        en: 'Content refreshed! 🔄',
-                        ja: 'コンテンツが更新されました！ 🔄'
+                        en: 'Progress complete! 🎉',
+                        ja: 'プログレス完了！ 🎉'
                     };
                     iosToast(messages[currentLanguage]);
-                    resolve();
-                }, 2000);
-            });
+                }
+            }, 50);
         }
+    }
 
-        // Initialize demo content
-        document.addEventListener('DOMContentLoaded', function() {
-            // Create demo switches
-            const demoSwitch1 = iosUI.createSwitch({
-                id: 'demo-switch-1',
-                checked: true,
-                onChange: (e) => {
+    function toggleActivity() {
+        const activityIndicator = document.querySelector('#demoActivityIndicator .ios-activity-indicator');
+        if (activityIndicator) {
+            activityVisible = !activityVisible;
+            if (activityVisible) {
+                iosUI.showActivityIndicator(activityIndicator);
+            } else {
+                iosUI.hideActivityIndicator(activityIndicator);
+            }
+        }
+    }
+
+    // Picker demo functions
+    function showDatePicker() {
+        const messages = {
+            en: 'Date selected: {date}',
+            ja: '選択された日付: {date}'
+        };
+        iosUI.showDatePicker({
+            mode: 'date',
+            value: new Date(),
+            onSelect: (date) => {
+                const msg = messages[currentLanguage];
+                iosToast(msg.replace('{date}', date.toLocaleDateString()));
+            }
+        });
+    }
+
+    function showCustomPicker() {
+        const options = {
+            en: {
+                columns: [['Small', 'Medium', 'Large'], ['Red', 'Green', 'Blue']],
+                message: 'Selected: {size}, {color}'
+            },
+            ja: {
+                columns: [['小', '中', '大'], ['赤', '緑', '青']],
+                message: '選択: {size}, {color}'
+            }
+        };
+        const opt = options[currentLanguage];
+        iosUI.showPicker({
+            columns: opt.columns,
+            selectedIndexes: [0, 0],
+            onSelect: (indexes, values) => {
+                const msg = opt.message.replace('{size}', values[0]).replace('{color}', values[1]);
+                iosToast(msg);
+            }
+        });
+    }
+
+    // Modal and popover demos
+    function showModalDemo() {
+        const messages = {
+            en: { title: 'Settings', content: 'This is a modal dialog with iOS-style presentation. You can add any content here including forms, lists, or other components.' },
+            ja: { title: '設定', content: 'これはiOS風プレゼンテーションのモーダルダイアログです。フォーム、リスト、その他のコンポーネントなど、任意のコンテンツを追加できます。' }
+        };
+        const msg = messages[currentLanguage];
+        iosUI.showModal({
+            title: msg.title,
+            content: msg.content,
+            size: 'medium'
+        });
+    }
+
+    function showPopoverDemo(event) {
+        const messages = {
+            en: 'This is a popover! It points to the button you clicked.',
+            ja: 'これはポップオーバーです！クリックしたボタンを指しています。'
+        };
+        iosUI.showPopover({
+            anchor: event.target,
+            content: messages[currentLanguage],
+            direction: 'top',
+            arrow: true
+        });
+    }
+
+    // Pull to refresh demo
+    function refreshDemo() {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+                const messages = {
+                    en: 'Content refreshed! 🔄',
+                    ja: 'コンテンツが更新されました！ 🔄'
+                };
+                iosToast(messages[currentLanguage]);
+                resolve();
+            }, 2000);
+        });
+    }
+
+    // Internationalization - 修正された翻訳オブジェクト
+    const translations = {
+        en: {
+            'hero.title': 'iOSUI.js',
+            'hero.subtitle': 'Beautiful iOS-like UI for the Web',
+            'hero.description': 'Create stunning, native-looking iOS interfaces that work perfectly on any platform. Bring the elegance of iOS design to your web applications with smooth animations and intuitive interactions.',
+            'hero.tryDemo': 'Try Interactive Demo',
+            'hero.quickStart': 'Quick Start Guide',
+            'hero.github': 'View on GitHub',
+            'stats.components': 'Components',
+            'stats.size': 'Minified + Gzipped',
+            'stats.downloads': 'Downloads',
+            'stats.coverage': 'Test Coverage',
+            'features.title': 'Why Choose iOSUI.js?',
+            'features.subtitle': 'Built with modern web standards and iOS design principles in mind',
+            'features.design.title': 'Pixel-Perfect Design',
+            'features.design.description': 'Meticulously crafted to match iOS design guidelines with attention to every detail',
+            'features.darkMode.title': 'Dark Mode Ready',
+            'features.darkMode.description': 'Automatic dark/light mode support with system preference detection',
+            'features.mobile.title': 'Mobile-First',
+            'features.mobile.description': 'Optimized for touch interactions with haptic feedback and smooth animations',
+            'features.performance.title': 'High Performance',
+            'features.performance.description': 'Zero dependencies, tree-shakable, and optimized for 60fps animations',
+            'features.i18n.title': 'Internationalization',
+            'features.i18n.description': 'Built-in support for multiple languages and RTL layouts',
+            'features.accessibility.title': 'Accessibility',
+            'features.accessibility.description': 'WCAG 2.1 compliant with full keyboard navigation and screen reader support',
+            'demo.title': 'Interactive Demo',
+            'demo.subtitle': 'Experience all the components in action. Click, tap, and interact with real iOS-style elements.',
+            'demo.dialogs.title': 'Dialogs & Alerts',
+            'demo.dialogs.description': 'Native-looking dialogs that work across all platforms with smooth animations.',
+            'demo.dialogs.alert': 'Show Alert',
+            'demo.dialogs.confirm': 'Show Confirm',
+            'demo.dialogs.prompt': 'Show Prompt',
+            'demo.dialogs.actionSheet': 'Action Sheet',
+            'demo.notifications.title': 'Notifications',
+            'demo.notifications.description': 'Toast messages, banners, and in-app notifications with customizable positions.',
+            'demo.notifications.toast': 'Show Toast',
+            'demo.notifications.banner': 'Show Banner',
+            'demo.notifications.inApp': 'In-App Notification',
+            'demo.notifications.area': 'Notifications will appear here',
+            'demo.forms.title': 'Form Controls',
+            'demo.forms.description': 'iOS-style switches, segmented controls, sliders, and steppers with smooth animations.',
+            'demo.forms.notifications': 'Enable notifications',
+            'demo.forms.darkMode': 'Dark mode',
+            'demo.forms.volume': 'Volume',
+            'demo.forms.quantity': 'Quantity',
+            'demo.progress.title': 'Progress Indicators',
+            'demo.progress.description': 'Progress bars, activity indicators, and circular progress with smooth animations.',
+            'demo.progress.linear': 'Linear Progress',
+            'demo.progress.circular': 'Circular Progress',
+            'demo.progress.activity': 'Activity Indicator',
+            'demo.progress.animate': 'Animate Progress',
+            'demo.progress.toggle': 'Toggle Activity',
+            'demo.pickers.title': 'Pickers',
+            'demo.pickers.description': 'Date pickers, time pickers, and custom pickers with native iOS feel.',
+            'demo.pickers.date': 'Show Date Picker',
+            'demo.pickers.custom': 'Show Custom Picker',
+            'demo.lists.title': 'Lists',
+            'demo.lists.description': 'iOS-style lists with various accessories and interactive elements.',
+            'demo.navigation.title': 'Navigation',
+            'demo.navigation.description': 'Navigation bars and tab bars for app-like experiences.',
+            'demo.navigation.content': 'Home content is displayed here',
+            'demo.contextMenu.title': 'Context Menu',
+            'demo.contextMenu.description': 'Right-click context menus with iOS-style animations.',
+            'demo.contextMenu.instruction': 'Right-click or long-press here to show context menu',
+            'demo.pullRefresh.title': 'Pull to Refresh',
+            'demo.pullRefresh.description': 'Native-style pull-to-refresh functionality.',
+            'demo.pullRefresh.instruction': 'Pull down to refresh this content',
+            'demo.pullRefresh.lastUpdated': 'Last updated:',
+            'demo.pullRefresh.never': 'Never',
+            'demo.search.title': 'Search & Modals',
+            'demo.search.description': 'Search bars, modals, and popovers for enhanced user interaction.',
+            'demo.search.modal': 'Show Modal',
+            'demo.search.popover': 'Show Popover',
+            'quickStart.title': 'Quick Start Guide',
+            'quickStart.subtitle': 'Get started with iOSUI.js in just a few simple steps',
+            'quickStart.step1.title': 'Download',
+            'quickStart.step1.description': 'Clone or download the library from GitHub',
+            'quickStart.step2.title': 'Include',
+            'quickStart.step2.description': 'Add CSS and JS files to your HTML',
+            'quickStart.step3.title': 'Create',
+            'quickStart.step3.description': 'Start building beautiful iOS interfaces',
+            'footer.title': 'Ready to Build?',
+            'footer.description': 'Join thousands of developers creating beautiful iOS-like experiences on the web',
+            'footer.star': 'Star on GitHub',
+            'footer.tryDemo': 'Try Demo',
+            'footer.support': 'Get Support',
+            'footer.copyright': '© 2024 iOSUI.js. Made with ❤️ for the web community.'
+        },
+        ja: {
+            'hero.title': 'iOSUI.js',
+            'hero.subtitle': 'ウェブ向けの美しいiOS風UI',
+            'hero.description': 'あらゆるプラットフォームで完璧に動作する、ネイティブのようなiOSインターフェースを作成できます。スムーズなアニメーションと直感的なインタラクションで、iOSデザインの優雅さをウェブアプリケーションに取り入れましょう。',
+            'hero.tryDemo': 'インタラクティブデモを試す',
+            'hero.quickStart': 'クイックスタートガイド',
+            'hero.github': 'GitHubで見る',
+            'stats.components': 'コンポーネント',
+            'stats.size': '圧縮済み',
+            'stats.downloads': 'ダウンロード数',
+            'stats.coverage': 'テストカバレッジ',
+            'features.title': 'なぜiOSUI.jsを選ぶのか？',
+            'features.subtitle': 'モダンなウェブ標準とiOSデザイン原則を念頭に構築',
+            'features.design.title': 'ピクセルパーフェクトデザイン',
+            'features.design.description': 'iOSデザインガイドラインに合わせて細部まで丁寧に作られています',
+            'features.darkMode.title': 'ダークモード対応',
+            'features.darkMode.description': 'システム設定の検出による自動ダーク/ライトモードサポート',
+            'features.mobile.title': 'モバイルファースト',
+            'features.mobile.description': 'ハプティックフィードバックとスムーズなアニメーションでタッチ操作に最適化',
+            'features.performance.title': '高性能',
+            'features.performance.description': '依存関係なし、ツリーシェイキング対応、60fpsアニメーション最適化',
+            'features.i18n.title': '国際化対応',
+            'features.i18n.description': '複数言語とRTLレイアウトの組み込みサポート',
+            'features.accessibility.title': 'アクセシビリティ',
+            'features.accessibility.description': 'WCAG 2.1準拠、完全なキーボードナビゲーションとスクリーンリーダーサポート',
+            'demo.title': 'インタラクティブデモ',
+            'demo.subtitle': 'すべてのコンポーネントを実際に体験してください。本物のiOS風要素をクリック、タップ、操作できます。',
+            'demo.dialogs.title': 'ダイアログ・アラート',
+            'demo.dialogs.description': 'スムーズなアニメーションで全プラットフォームで動作するネイティブ風ダイアログ。',
+            'demo.dialogs.alert': 'アラート表示',
+            'demo.dialogs.confirm': '確認ダイアログ',
+            'demo.dialogs.prompt': 'プロンプト表示',
+            'demo.dialogs.actionSheet': 'アクションシート',
+            'demo.notifications.title': '通知',
+            'demo.notifications.description': 'カスタマイズ可能な位置でのトーストメッセージ、バナー、アプリ内通知。',
+            'demo.notifications.toast': 'トースト表示',
+            'demo.notifications.banner': 'バナー表示',
+            'demo.notifications.inApp': 'アプリ内通知',
+            'demo.notifications.area': 'ここに通知が表示されます',
+            'demo.forms.title': 'フォームコントロール',
+            'demo.forms.description': 'スムーズなアニメーションのiOS風スイッチ、セグメントコントロール、スライダー、ステッパー。',
+            'demo.forms.notifications': '通知を有効にする',
+            'demo.forms.darkMode': 'ダークモード',
+            'demo.forms.volume': '音量',
+            'demo.forms.quantity': '数量',
+            'demo.progress.title': 'プログレスインジケーター',
+            'demo.progress.description': 'スムーズなアニメーションのプログレスバー、アクティビティインジケーター、円形プログレス。',
+            'demo.progress.linear': 'リニアプログレス',
+            'demo.progress.circular': '円形プログレス',
+            'demo.progress.activity': 'アクティビティインジケーター',
+            'demo.progress.animate': 'プログレスアニメーション',
+            'demo.progress.toggle': 'アクティビティ切り替え',
+            'demo.pickers.title': 'ピッカー',
+            'demo.pickers.description': 'ネイティブiOS感覚の日付ピッカー、時間ピッカー、カスタムピッカー。',
+            'demo.pickers.date': '日付ピッカー表示',
+            'demo.pickers.custom': 'カスタムピッカー表示',
+            'demo.lists.title': 'リスト',
+            'demo.lists.description': '様々なアクセサリーとインタラクティブ要素を持つiOS風リスト。',
+            'demo.navigation.title': 'ナビゲーション',
+            'demo.navigation.description': 'アプリのような体験のためのナビゲーションバーとタブバー。',
+            'demo.navigation.content': 'ホームコンテンツがここに表示されます',
+            'demo.contextMenu.title': 'コンテキストメニュー',
+            'demo.contextMenu.description': 'iOS風アニメーションの右クリックコンテキストメニュー。',
+            'demo.contextMenu.instruction': 'ここを右クリックまたは長押ししてコンテキストメニューを表示',
+            'demo.pullRefresh.title': 'プルトゥリフレッシュ',
+            'demo.pullRefresh.description': 'ネイティブ風プルトゥリフレッシュ機能。',
+            'demo.pullRefresh.instruction': 'このコンテンツを更新するために下に引っ張ってください',
+            'demo.pullRefresh.lastUpdated': '最終更新:',
+            'demo.pullRefresh.never': 'なし',
+            'demo.search.title': '検索・モーダル',
+            'demo.search.description': 'ユーザーインタラクション向上のための検索バー、モーダル、ポップオーバー。',
+            'demo.search.modal': 'モーダル表示',
+            'demo.search.popover': 'ポップオーバー表示',
+            'quickStart.title': 'クイックスタートガイド',
+            'quickStart.subtitle': 'わずか数ステップでiOSUI.jsを始められます',
+            'quickStart.step1.title': 'ダウンロード',
+            'quickStart.step1.description': 'GitHubからライブラリをクローンまたはダウンロード',
+            'quickStart.step2.title': '読み込み',
+            'quickStart.step2.description': 'HTMLにCSSとJSファイルを追加',
+            'quickStart.step3.title': '作成',
+            'quickStart.step3.description': '美しいiOSインターフェースの構築を開始',
+            'footer.title': '構築の準備はできましたか？',
+            'footer.description': 'ウェブで美しいiOS風体験を作成している何千人もの開発者に参加しましょう',
+            'footer.star': 'GitHubでスター',
+            'footer.tryDemo': 'デモを試す',
+            'footer.support': 'サポートを受ける',
+            'footer.copyright': '© 2024 iOSUI.js. ウェブコミュニティのために❤️で作られました。'
+        }
+    };
+
+    let currentLanguage = 'en';
+
+    function setLanguage(lang) {
+        currentLanguage = lang;
+        document.documentElement.lang = lang;
+        
+        // Update all elements with data-i18n attribute
+        document.querySelectorAll('[data-i18n]').forEach(element => {
+            const key = element.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                element.textContent = translations[lang][key];
+            }
+        });
+        
+        // Update language buttons
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+        });
+        
+        // Store preference
+        localStorage.setItem('iosui-language', lang);
+    }
+
+    // Language switcher
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            setLanguage(btn.getAttribute('data-lang'));
+        });
+    });
+
+    // Load saved language preference
+    const savedLanguage = localStorage.getItem('iosui-language') || 'en';
+    setLanguage(savedLanguage);
+
+    // Initialize demo content
+    document.addEventListener('DOMContentLoaded', function() {
+        // Create demo switches
+        const demoSwitch1 = iosUI.createSwitch({
+            id: 'demo-switch-1',
+            checked: true,
+            onChange: (e) => {
+                const messages = {
+                    en: { on: 'Notifications enabled 🔔', off: 'Notifications disabled 🔕' },
+                    ja: { on: '通知が有効になりました 🔔', off: '通知が無効になりました 🔕' }
+                };
+                const msg = messages[currentLanguage];
+                iosToast(e.target.checked ? msg.on : msg.off);
+                iosHaptic('light');
+            }
+        });
+        document.getElementById('demoSwitch1').appendChild(demoSwitch1);
+
+        const demoSwitch2 = iosUI.createSwitch({
+            id: 'demo-switch-2',
+            checked: false,
+            onChange: (e) => {
+                const messages = {
+                    en: { on: 'Dark mode enabled 🌙', off: 'Light mode enabled ☀️' },
+                    ja: { on: 'ダークモードが有効になりました 🌙', off: 'ライトモードが有効になりました ☀️' }
+                };
+                const msg = messages[currentLanguage];
+                iosToast(e.target.checked ? msg.on : msg.off);
+                iosHaptic('light');
+            }
+        });
+        document.getElementById('demoSwitch2').appendChild(demoSwitch2);
+
+        // Create demo segmented control
+        const segmentOptions = {
+            en: ['All', 'Photos', 'Videos', 'Audio'],
+            ja: ['すべて', '写真', 'ビデオ', 'オーディオ']
+        };
+        const demoSegmented = iosUI.createSegmentedControl({
+            id: 'demo-segmented',
+            segments: segmentOptions[currentLanguage],
+            selectedIndex: 0,
+            onChange: (e) => {
+                const messages = {
+                    en: 'Selected: {segment} 📂',
+                    ja: '選択: {segment} 📂'
+                };
+                const msg = messages[currentLanguage].replace('{segment}', e.detail.selectedSegment.textContent);
+                iosToast(msg);
+                iosHaptic('light');
+            }
+        });
+        document.getElementById('demoSegmented').appendChild(demoSegmented);
+
+        // Create demo slider
+        const demoSlider = iosUI.createSlider({
+            id: 'demo-slider',
+            min: 0,
+            max: 100,
+            value: 75,
+            showValue: true,
+            onChange: (value) => {
+                if (value % 10 === 0) {
                     const messages = {
-                        en: { on: 'Notifications enabled 🔔', off: 'Notifications disabled 🔕' },
-                        ja: { on: '通知が有効になりました 🔔', off: '通知が無効になりました 🔕' }
-                    };
-                    const msg = messages[currentLanguage];
-                    iosToast(e.target.checked ? msg.on : msg.off);
-                    iosHaptic('light');
-                }
-            });
-            document.getElementById('demoSwitch1').appendChild(demoSwitch1);
-
-            const demoSwitch2 = iosUI.createSwitch({
-                id: 'demo-switch-2',
-                checked: false,
-                onChange: (e) => {
-                    const messages = {
-                        en: { on: 'Dark mode enabled 🌙', off: 'Light mode enabled ☀️' },
-                        ja: { on: 'ダークモードが有効になりました 🌙', off: 'ライトモードが有効になりました ☀️' }
-                    };
-                    const msg = messages[currentLanguage];
-                    iosToast(e.target.checked ? msg.on : msg.off);
-                    iosHaptic('light');
-                }
-            });
-            document.getElementById('demoSwitch2').appendChild(demoSwitch2);
-
-            // Create demo segmented control
-            const segmentOptions = {
-                en: ['All', 'Photos', 'Videos', 'Audio'],
-                ja: ['すべて', '写真', 'ビデオ', 'オーディオ']
-            };
-            const demoSegmented = iosUI.createSegmentedControl({
-                id: 'demo-segmented',
-                segments: segmentOptions[currentLanguage],
-                selectedIndex: 0,
-                onChange: (e) => {
-                    const messages = {
-                        en: 'Selected: {segment} 📂',
-                        ja: '選択: {segment} 📂'
-                    };
-                    const msg = messages[currentLanguage].replace('{segment}', e.detail.selectedSegment.textContent);
-                    iosToast(msg);
-                    iosHaptic('light');
-                }
-            });
-            document.getElementById('demoSegmented').appendChild(demoSegmented);
-
-            // Create demo slider
-            const demoSlider = iosUI.createSlider({
-                id: 'demo-slider',
-                min: 0,
-                max: 100,
-                value: 75,
-                showValue: true,
-                onChange: (value) => {
-                    if (value % 10 === 0) {
-                        const messages = {
-                            en: 'Volume: {value}% 🔊',
-                            ja: '音量: {value}% 🔊'
-                        };
-                        const msg = messages[currentLanguage].replace('{value}', value);
-                        iosToast(msg);
-                    }
-                }
-            });
-            document.getElementById('demoSlider').appendChild(demoSlider);
-
-            // Create demo stepper
-            const demoStepper = iosUI.createStepper({
-                id: 'demo-stepper',
-                min: 1,
-                max: 10,
-                value: 1,
-                onChange: (value) => {
-                    const messages = {
-                        en: 'Quantity: {value}',
-                        ja: '数量: {value}'
+                        en: 'Volume: {value}% 🔊',
+                        ja: '音量: {value}% 🔊'
                     };
                     const msg = messages[currentLanguage].replace('{value}', value);
                     iosToast(msg);
-                    iosHaptic('light');
                 }
-            });
-            document.getElementById('demoStepper').appendChild(demoStepper);
-
-            // Create demo progress indicators
-            const demoProgressBar = iosUI.createProgressBar({
-                value: 0.6,
-                showPercentage: true,
-                animated: true
-            });
-            document.getElementById('demoProgressBar').appendChild(demoProgressBar);
-
-            const demoCircularProgress = iosUI.createCircularProgress({
-                value: 0.75,
-                size: 60,
-                strokeWidth: 4,
-                showPercentage: true
-            });
-            document.getElementById('demoCircularProgress').appendChild(demoCircularProgress);
-
-            const demoActivityIndicator = iosUI.createActivityIndicator({
-                size: 'medium',
-                color: 'blue'
-            });
-            document.getElementById('demoActivityIndicator').appendChild(demoActivityIndicator);
-
-            // Create demo search bar
-            const searchPlaceholders = {
-                en: 'Search...',
-                ja: '検索...'
-            };
-            const demoSearchBar = iosUI.createSearchBar({
-                placeholder: searchPlaceholders[currentLanguage],
-                showCancelButton: true,
-                onSearch: (query) => {
-                    const messages = {
-                        en: 'Searching for: {query} 🔍',
-                        ja: '検索中: {query} 🔍'
-                    };
-                    const msg = messages[currentLanguage].replace('{query}', query);
-                    iosToast(msg);
-                },
-                onCancel: () => {
-                    const messages = {
-                        en: 'Search cancelled',
-                        ja: '検索がキャンセルされました'
-                    };
-                    iosToast(messages[currentLanguage]);
-                }
-            });
-            document.getElementById('demoSearchBar').appendChild(demoSearchBar);
-
-            // Create demo list
-            const listItemsData = {
-                en: [
-                    {
-                        title: 'Settings',
-                        subtitle: 'App preferences and configuration',
-                        accessory: 'chevron',
-                        onClick: () => {
-                            iosToast('Settings tapped! ⚙️');
-                            iosHaptic('light');
-                        }
-                    },
-                    {
-                        title: 'Notifications',
-                        subtitle: 'Manage your alerts and sounds',
-                        accessory: 'switch',
-                        switchValue: true,
-                        onSwitchChange: (e) => {
-                            iosToast(`Notifications ${e.target.checked ? 'enabled' : 'disabled'} 🔔`);
-                            iosHaptic('light');
-                        }
-                    },
-                    {
-                        title: 'Privacy',
-                        subtitle: 'Control your privacy settings',
-                        accessory: 'chevron',
-                        onClick: () => {
-                            iosToast('Privacy tapped! 🔒');
-                            iosHaptic('light');
-                        }
-                    },
-                    {
-                        title: 'About',
-                        subtitle: 'App information and version',
-                        accessory: 'v2.0.0',
-                        onClick: () => iosAlert('About iOSUI.js', 'Version 2.0.0\n\nA beautiful iOS-like UI library for the web.\n\nMade with ❤️ for developers everywhere.')
-                    }
-                ],
-                ja: [
-                    {
-                        title: '設定',
-                        subtitle: 'アプリの設定と構成',
-                        accessory: 'chevron',
-                        onClick: () => {
-                            iosToast('設定がタップされました！ ⚙️');
-                            iosHaptic('light');
-                        }
-                    },
-                    {
-                        title: '通知',
-                        subtitle: 'アラートとサウンドの管理',
-                        accessory: 'switch',
-                        switchValue: true,
-                        onSwitchChange: (e) => {
-                            iosToast(`通知が${e.target.checked ? '有効' : '無効'}になりました 🔔`);
-                            iosHaptic('light');
-                        }
-                    },
-                    {
-                        title: 'プライバシー',
-                        subtitle: 'プライバシー設定の制御',
-                        accessory: 'chevron',
-                        onClick: () => {
-                            iosToast('プライバシーがタップされました！ 🔒');
-                            iosHaptic('light');
-                        }
-                    },
-                    {
-                        title: 'このアプリについて',
-                        subtitle: 'アプリ情報とバージョン',
-                        accessory: 'v2.0.0',
-                        onClick: () => iosAlert('iOSUI.jsについて', 'バージョン 2.0.0\n\nウェブ向けの美しいiOS風UIライブラリ。\n\n世界中の開発者のために❤️で作られました。')
-                    }
-                ]
-            };
-            const demoList = iosUI.createList(listItemsData[currentLanguage]);
-            demoList.style.margin = '0';
-            document.getElementById('demoList').appendChild(demoList);
-
-            // Create demo navigation
-            const navTitles = {
-                en: { title: 'iOSUI Demo', back: '← Back', edit: 'Edit', backToast: 'Back button tapped', editToast: 'Edit button tapped' },
-                ja: { title: 'iOSUIデモ', back: '← 戻る', edit: '編集', backToast: '戻るボタンがタップされました', editToast: '編集ボタンがタップされました' }
-            };
-            const navTitle = navTitles[currentLanguage];
-            const demoNav = iosUI.createNavigationBar({
-                title: navTitle.title,
-                leftButton: {
-                    text: navTitle.back,
-                    onClick: () => {
-                        iosToast(navTitle.backToast);
-                        iosHaptic('light');
-                    }
-                },
-                rightButton: {
-                    text: navTitle.edit,
-                    onClick: () => {
-                        iosToast(navTitle.editToast);
-                        iosHaptic('light');
-                    }
-                }
-            });
-            document.getElementById('demoNavigation').appendChild(demoNav);
-
-            // Create demo tab bar
-            const tabLabels = {
-                en: [
-                    { label: 'Home', icon: '🏠' },
-                    { label: 'Search', icon: '🔍' },
-                    { label: 'Favorites', icon: '❤️' },
-                    { label: 'Profile', icon: '👤' }
-                ],
-                ja: [
-                    { label: 'ホーム', icon: '🏠' },
-                    { label: '検索', icon: '🔍' },
-                    { label: 'お気に入り', icon: '❤️' },
-                    { label: 'プロフィール', icon: '👤' }
-                ]
-            };
-            const tabContent = document.getElementById('tabContent');
-            const tabContents = {
-                en: [
-                    'Home content is displayed here 🏠',
-                    'Search functionality would be here 🔍',
-                    'Your favorite items would appear here ❤️',
-                    'User profile information would be shown here 👤'
-                ],
-                ja: [
-                    'ホームコンテンツがここに表示されます 🏠',
-                    '検索機能がここに表示されます 🔍',
-                    'お気に入りのアイテムがここに表示されます ❤️',
-                    'ユーザープロフィール情報がここに表示されます 👤'
-                ]
-            };
-            const demoTabBar = iosUI.createTabBar({
-                tabs: tabLabels[currentLanguage],
-                selectedIndex: 0,
-                onChange: (index, tab) => {
-                    tabContent.textContent = tabContents[currentLanguage][index];
-                    const messages = {
-                        en: 'Selected: {tab}',
-                        ja: '選択: {tab}'
-                    };
-                    const msg = messages[currentLanguage].replace('{tab}', tab.label);
-                    iosToast(msg);
-                    iosHaptic('light');
-                }
-            });
-            document.getElementById('demoTabBar').appendChild(demoTabBar);
-
-            // Context menu demo
-            const contextMenuDemo = document.getElementById('contextMenuDemo');
-            
-            // Right-click context menu
-            contextMenuDemo.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                
-                const menuItemsData = {
-                    en: [
-                        { 
-                            text: 'Copy', 
-                            icon: '📋',
-                            onClick: () => {
-                                iosToast('Copied to clipboard! 📋');
-                                iosHaptic('success');
-                            }
-                        },
-                        { 
-                            text: 'Share', 
-                            icon: '📤',
-                            onClick: () => {
-                                iosToast('Share dialog opened! 📤');
-                                iosHaptic('light');
-                            }
-                        },
-                        { 
-                            text: 'Save', 
-                            icon: '💾',
-                            onClick: () => {
-                                iosToast('Saved successfully! 💾');
-                                iosHaptic('success');
-                            }
-                        },
-                        { 
-                            text: 'Delete', 
-                            icon: '🗑️', 
-                            destructive: true,
-                            onClick: () => {
-                                iosConfirm('Delete Item', 'Are you sure you want to delete this item?').then(confirmed => {
-                                    if (confirmed) {
-                                        iosToast('Item deleted! 🗑️');
-                                        iosHaptic('error');
-                                    }
-                                });
-                            }
-                        }
-                    ],
-                    ja: [
-                        { 
-                            text: 'コピー', 
-                            icon: '📋',
-                            onClick: () => {
-                                iosToast('クリップボードにコピーしました！ 📋');
-                                iosHaptic('success');
-                            }
-                        },
-                        { 
-                            text: '共有', 
-                            icon: '📤',
-                            onClick: () => {
-                                iosToast('共有ダイアログが開きました！ 📤');
-                                iosHaptic('light');
-                            }
-                        },
-                        { 
-                            text: '保存', 
-                            icon: '💾',
-                            onClick: () => {
-                                iosToast('正常に保存されました！ 💾');
-                                iosHaptic('success');
-                            }
-                        },
-                        { 
-                            text: '削除', 
-                            icon: '🗑️', 
-                            destructive: true,
-                            onClick: () => {
-                                iosConfirm('アイテムを削除', 'このアイテムを削除してもよろしいですか？').then(confirmed => {
-                                    if (confirmed) {
-                                        iosToast('アイテムが削除されました！ 🗑️');
-                                        iosHaptic('error');
-                                    }
-                                });
-                            }
-                        }
-                    ]
-                };
-                
-                iosUI.showContextMenu({
-                    x: e.clientX,
-                    y: e.clientY,
-                    items: menuItemsData[currentLanguage]
-                });
-            });
-
-            // Long press for mobile
-            let longPressTimer;
-            contextMenuDemo.addEventListener('touchstart', (e) => {
-                longPressTimer = setTimeout(() => {
-                    const touch = e.touches[0];
-                    const event = new MouseEvent('contextmenu', {
-                        clientX: touch.clientX,
-                        clientY: touch.clientY
-                    });
-                    contextMenuDemo.dispatchEvent(event);
-                }, 500);
-            });
-
-            contextMenuDemo.addEventListener('touchend', () => {
-                clearTimeout(longPressTimer);
-            });
-
-            contextMenuDemo.addEventListener('touchmove', () => {
-                clearTimeout(longPressTimer);
-            });
-
-            // Create hero demo content
-            const heroDemo = document.getElementById('heroDemo');
-            heroDemo.style.padding = '20px';
-            heroDemo.style.display = 'flex';
-            heroDemo.style.flexDirection = 'column';
-            heroDemo.style.gap = '16px';
-            
-            // Add a simple list to hero demo
-            const heroListItemsData = {
-                en: [
-                    {
-                        title: 'Messages',
-                        subtitle: '3 new messages',
-                        accessory: 'chevron'
-                    },
-                    {
-                        title: 'Settings',
-                        subtitle: 'App preferences',
-                        accessory: 'chevron'
-                    },
-                    {
-                        title: 'Notifications',
-                        accessory: 'switch',
-                        switchValue: true
-                    }
-                ],
-                ja: [
-                    {
-                        title: 'メッセージ',
-                        subtitle: '3件の新着メッセージ',
-                        accessory: 'chevron'
-                    },
-                    {
-                        title: '設定',
-                        subtitle: 'アプリの設定',
-                        accessory: 'chevron'
-                    },
-                    {
-                        title: '通知',
-                        accessory: 'switch',
-                        switchValue: true
-                    }
-                ]
-            };
-            const heroList = iosUI.createList(heroListItemsData[currentLanguage]);
-            heroList.style.margin = '0';
-            heroDemo.appendChild(heroList);
-
-            // Add a small button to hero demo
-            const heroButton = document.createElement('button');
-            heroButton.className = 'ios-button';
-            const buttonTexts = {
-                en: 'Try Demo',
-                ja: 'デモを試す'
-            };
-            heroButton.textContent = buttonTexts[currentLanguage];
-            heroButton.style.margin = '0';
-            heroButton.onclick = scrollToDemo;
-            heroDemo.appendChild(heroButton);
-
-            // Update hero demo when language changes
-            const originalSetLanguage = setLanguage;
-            setLanguage = function(lang) {
-                originalSetLanguage(lang);
-                
-                // Update hero demo content
-                heroDemo.innerHTML = '';
-                heroDemo.style.padding = '20px';
-                heroDemo.style.display = 'flex';
-                heroDemo.style.flexDirection = 'column';
-                heroDemo.style.gap = '16px';
-                
-                const newHeroList = iosUI.createList(heroListItemsData[lang]);
-                newHeroList.style.margin = '0';
-                heroDemo.appendChild(newHeroList);
-                
-                const newHeroButton = document.createElement('button');
-                newHeroButton.className = 'ios-button';
-                newHeroButton.textContent = buttonTexts[lang];
-                newHeroButton.style.margin = '0';
-                newHeroButton.onclick = scrollToDemo;
-                heroDemo.appendChild(newHeroButton);
-                
-                // Update segmented control
-                const newSegmented = iosUI.createSegmentedControl({
-                    id: 'demo-segmented-new',
-                    segments: segmentOptions[lang],
-                    selectedIndex: 0,
-                    onChange: (e) => {
-                        const messages = {
-                            en: 'Selected: {segment} 📂',
-                            ja: '選択: {segment} 📂'
-                        };
-                        const msg = messages[lang].replace('{segment}', e.detail.selectedSegment.textContent);
-                        iosToast(msg);
-                        iosHaptic('light');
-                    }
-                });
-                const segmentedContainer = document.getElementById('demoSegmented');
-                segmentedContainer.innerHTML = '';
-                segmentedContainer.appendChild(newSegmented);
-                
-                // Update search bar placeholder
-                const searchBar = document.querySelector('#demoSearchBar .ios-search-bar input');
-                if (searchBar) {
-                    searchBar.placeholder = searchPlaceholders[lang];
-                }
-            };
-        });
-
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Add some visual feedback for haptic feedback on non-supporting devices
-        const originalHaptic = window.iosHaptic;
-        window.iosHaptic = function(type) {
-            // Call original haptic function
-            if (originalHaptic) {
-                originalHaptic(type);
             }
-            
-            // Visual feedback for demo purposes
-            const feedbackMessages = {
-                en: {
-                    'light': 'Light haptic feedback 📳',
-                    'medium': 'Medium haptic feedback 📳',
-                    'heavy': 'Heavy haptic feedback 📳',
-                    'success': 'Success haptic pattern ✅',
-                    'error': 'Error haptic pattern ❌'
+        });
+        document.getElementById('demoSlider').appendChild(demoSlider);
+
+        // Create demo stepper
+        const demoStepper = iosUI.createStepper({
+            id: 'demo-stepper',
+            min: 1,
+            max: 10,
+            value: 1,
+            onChange: (value) => {
+                const messages = {
+                    en: 'Quantity: {value}',
+                    ja: '数量: {value}'
+                };
+                const msg = messages[currentLanguage].replace('{value}', value);
+                iosToast(msg);
+                iosHaptic('light');
+            }
+        });
+        document.getElementById('demoStepper').appendChild(demoStepper);
+
+        // Create demo progress indicators
+        const demoProgressBar = iosUI.createProgressBar({
+            value: 0.6,
+            showPercentage: true,
+            animated: true
+        });
+        document.getElementById('demoProgressBar').appendChild(demoProgressBar);
+
+        const demoCircularProgress = iosUI.createCircularProgress({
+            value: 0.75,
+            size: 60,
+            strokeWidth: 4,
+            showPercentage: true
+        });
+        document.getElementById('demoCircularProgress').appendChild(demoCircularProgress);
+
+        const demoActivityIndicator = iosUI.createActivityIndicator({
+            size: 'medium',
+            color: 'blue'
+        });
+        document.getElementById('demoActivityIndicator').appendChild(demoActivityIndicator);
+
+        // Create demo search bar
+        const searchPlaceholders = {
+            en: 'Search...',
+            ja: '検索...'
+        };
+        const demoSearchBar = iosUI.createSearchBar({
+            placeholder: searchPlaceholders[currentLanguage],
+            showCancelButton: true,
+            onSearch: (query) => {
+                const messages = {
+                    en: 'Searching for: {query} 🔍',
+                    ja: '検索中: {query} 🔍'
+                };
+                const msg = messages[currentLanguage].replace('{query}', query);
+                iosToast(msg);
+            },
+            onCancel: () => {
+                const messages = {
+                    en: 'Search cancelled',
+                    ja: '検索がキャンセルされました'
+                };
+                iosToast(messages[currentLanguage]);
+            }
+        });
+        document.getElementById('demoSearchBar').appendChild(demoSearchBar);
+
+        // Create demo list
+        const listItemsData = {
+            en: [
+                {
+                    title: 'Settings',
+                    subtitle: 'App preferences and configuration',
+                    accessory: 'chevron',
+                    onClick: () => {
+                        iosToast('Settings tapped! ⚙️');
+                        iosHaptic('light');
+                    }
                 },
-                ja: {
-                    'light': 'ライトハプティックフィードバック 📳',
-                    'medium': 'ミディアムハプティックフィードバック 📳',
-                    'heavy': 'ヘビーハプティ​​ックフィードバック 📳',
-                    'success': '成功ハプティックパターン ✅',
-                    'error': 'エラーハプティックパターン ❌'
+                {
+                    title: 'Notifications',
+                    subtitle: 'Manage your alerts and sounds',
+                    accessory: 'switch',
+                    switchValue: true,
+                    onSwitchChange: (e) => {
+                        iosToast(`Notifications ${e.target.checked ? 'enabled' : 'disabled'} 🔔`);
+                        iosHaptic('light');
+                    }
+                },
+                {
+                    title: 'Privacy',
+                    subtitle: 'Control your privacy settings',
+                    accessory: 'chevron',
+                    onClick: () => {
+                        iosToast('Privacy tapped! 🔒');
+                        iosHaptic('light');
+                    }
+                },
+                {
+                    title: 'About',
+                    subtitle: 'App information and version',
+                    accessory: 'v2.0.0',
+                    onClick: () => iosAlert('About iOSUI.js', 'Version 2.0.0\n\nA beautiful iOS-like UI library for the web.\n\nMade with ❤️ for developers everywhere.')
                 }
+            ],
+            ja: [
+                {
+                    title: '設定',
+                    subtitle: 'アプリの設定と構成',
+                    accessory: 'chevron',
+                    onClick: () => {
+                        iosToast('設定がタップされました！ ⚙️');
+                        iosHaptic('light');
+                    }
+                },
+                {
+                    title: '通知',
+                    subtitle: 'アラートとサウンドの管理',
+                    accessory: 'switch',
+                    switchValue: true,
+                    onSwitchChange: (e) => {
+                        iosToast(`通知が${e.target.checked ? '有効' : '無効'}になりました 🔔`);
+                        iosHaptic('light');
+                    }
+                },
+                {
+                    title: 'プライバシー',
+                    subtitle: 'プライバシー設定の制御',
+                    accessory: 'chevron',
+                    onClick: () => {
+                        iosToast('プライバシーがタップされました！ 🔒');
+                        iosHaptic('light');
+                    }
+                },
+                {
+                    title: 'このアプリについて',
+                    subtitle: 'アプリ情報とバージョン',
+                    accessory: 'v2.0.0',
+                    onClick: () => iosAlert('iOSUI.jsについて', 'バージョン 2.0.0\n\nウェブ向けの美しいiOS風UIライブラリ。\n\n世界中の開発者のために❤️で作られました。')
+                }
+            ]
+        };
+        const demoList = iosUI.createList(listItemsData[currentLanguage]);
+        demoList.style.margin = '0';
+        document.getElementById('demoList').appendChild(demoList);
+
+        // Create demo navigation
+        const navTitles = {
+            en: { title: 'iOSUI Demo', back: '← Back', edit: 'Edit', backToast: 'Back button tapped', editToast: 'Edit button tapped' },
+            ja: { title: 'iOSUIデモ', back: '← 戻る', edit: '編集', backToast: '戻るボタンがタップされました', editToast: '編集ボタンがタップされました' }
+        };
+        const navTitle = navTitles[currentLanguage];
+        const demoNav = iosUI.createNavigationBar({
+            title: navTitle.title,
+            leftButton: {
+                text: navTitle.back,
+                onClick: () => {
+                    iosToast(navTitle.backToast);
+                    iosHaptic('light');
+                }
+            },
+            rightButton: {
+                text: navTitle.edit,
+                onClick: () => {
+                    iosToast(navTitle.editToast);
+                    iosHaptic('light');
+                }
+            }
+        });
+        document.getElementById('demoNavigation').appendChild(demoNav);
+
+        // Create demo tab bar
+        const tabLabels = {
+            en: [
+                { label: 'Home', icon: '🏠' },
+                { label: 'Search', icon: '🔍' },
+                { label: 'Favorites', icon: '❤️' },
+                { label: 'Profile', icon: '👤' }
+            ],
+            ja: [
+                { label: 'ホーム', icon: '🏠' },
+                { label: '検索', icon: '🔍' },
+                { label: 'お気に入り', icon: '❤️' },
+                { label: 'プロフィール', icon: '👤' }
+            ]
+        };
+        const tabContent = document.getElementById('tabContent');
+        const tabContents = {
+            en: [
+                'Home content is displayed here 🏠',
+                'Search functionality would be here 🔍',
+                'Your favorite items would appear here ❤️',
+                'User profile information would be shown here 👤'
+            ],
+            ja: [
+                'ホームコンテンツがここに表示されます 🏠',
+                '検索機能がここに表示されます 🔍',
+                'お気に入りのアイテムがここに表示されます ❤️',
+                'ユーザープロフィール情報がここに表示されます 👤'
+            ]
+        };
+        const demoTabBar = iosUI.createTabBar({
+            tabs: tabLabels[currentLanguage],
+            selectedIndex: 0,
+            onChange: (index, tab) => {
+                tabContent.textContent = tabContents[currentLanguage][index];
+                const messages = {
+                    en: 'Selected: {tab}',
+                    ja: '選択: {tab}'
+                };
+                const msg = messages[currentLanguage].replace('{tab}', tab.label);
+                iosToast(msg);
+                iosHaptic('light');
+            }
+        });
+        document.getElementById('demoTabBar').appendChild(demoTabBar);
+
+        // Context menu demo
+        const contextMenuDemo = document.getElementById('contextMenuDemo');
+        
+        // Right-click context menu
+        contextMenuDemo.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            
+            const menuItemsData = {
+                en: [
+                    { 
+                        text: 'Copy', 
+                        icon: '📋',
+                        onClick: () => {
+                            iosToast('Copied to clipboard! 📋');
+                            iosHaptic('success');
+                        }
+                    },
+                    { 
+                        text: 'Share', 
+                        icon: '📤',
+                        onClick: () => {
+                            iosToast('Share dialog opened! 📤');
+                            iosHaptic('light');
+                        }
+                    },
+                    { 
+                        text: 'Save', 
+                        icon: '💾',
+                        onClick: () => {
+                            iosToast('Saved successfully! 💾');
+                            iosHaptic('success');
+                        }
+                    },
+                    { 
+                        text: 'Delete', 
+                        icon: '🗑️', 
+                        destructive: true,
+                        onClick: () => {
+                            iosConfirm('Delete Item', 'Are you sure you want to delete this item?').then(confirmed => {
+                                if (confirmed) {
+                                    iosToast('Item deleted! 🗑️');
+                                    iosHaptic('error');
+                                }
+                            });
+                        }
+                    }
+                ],
+                ja: [
+                    { 
+                        text: 'コピー', 
+                        icon: '📋',
+                        onClick: () => {
+                            iosToast('クリップボードにコピーしました！ 📋');
+                            iosHaptic('success');
+                        }
+                    },
+                    { 
+                        text: '共有', 
+                        icon: '📤',
+                        onClick: () => {
+                            iosToast('共有ダイアログが開きました！ 📤');
+                            iosHaptic('light');
+                        }
+                    },
+                    { 
+                        text: '保存', 
+                        icon: '💾',
+                        onClick: () => {
+                            iosToast('正常に保存されました！ 💾');
+                            iosHaptic('success');
+                        }
+                    },
+                    { 
+                        text: '削除', 
+                        icon: '🗑️', 
+                        destructive: true,
+                        onClick: () => {
+                            iosConfirm('アイテムを削除', 'このアイテムを削除してもよろしいですか？').then(confirmed => {
+                                if (confirmed) {
+                                    iosToast('アイテムが削除されました！ 🗑️');
+                                    iosHaptic('error');
+                                }
+                            });
+                        }
+                    }
+                ]
             };
             
-            if (feedbackMessages[currentLanguage][type]) {
-                // Only show haptic feedback message occasionally to avoid spam
-                if (Math.random() < 0.3) {
-                    iosToast(feedbackMessages[currentLanguage][type], 1000);
+            iosUI.showContextMenu({
+                x: e.clientX,
+                y: e.clientY,
+                items: menuItemsData[currentLanguage]
+            });
+        });
+
+        // Long press for mobile
+        let longPressTimer;
+        contextMenuDemo.addEventListener('touchstart', (e) => {
+            longPressTimer = setTimeout(() => {
+                const touch = e.touches[0];
+                const event = new MouseEvent('contextmenu', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                contextMenuDemo.dispatchEvent(event);
+            }, 500);
+        });
+
+        contextMenuDemo.addEventListener('touchend', () => {
+            clearTimeout(longPressTimer);
+        });
+
+        contextMenuDemo.addEventListener('touchmove', () => {
+            clearTimeout(longPressTimer);
+        });
+
+        // Create hero demo content
+        const heroDemo = document.getElementById('heroDemo');
+        heroDemo.style.padding = '20px';
+        heroDemo.style.display = 'flex';
+        heroDemo.style.flexDirection = 'column';
+        heroDemo.style.gap = '16px';
+        
+        // Add a simple list to hero demo
+        const heroListItemsData = {
+            en: [
+                {
+                    title: 'Messages',
+                    subtitle: '3 new messages',
+                    accessory: 'chevron'
+                },
+                {
+                    title: 'Settings',
+                    subtitle: 'App preferences',
+                    accessory: 'chevron'
+                },
+                {
+                    title: 'Notifications',
+                    accessory: 'switch',
+                    switchValue: true
                 }
+            ],
+            ja: [
+                {
+                    title: 'メッセージ',
+                    subtitle: '3件の新着メッセージ',
+                    accessory: 'chevron'
+                },
+                {
+                    title: '設定',
+                    subtitle: 'アプリの設定',
+                    accessory: 'chevron'
+                },
+                {
+                    title: '通知',
+                    accessory: 'switch',
+                    switchValue: true
+                }
+            ]
+        };
+        const heroList = iosUI.createList(heroListItemsData[currentLanguage]);
+        heroList.style.margin = '0';
+        heroDemo.appendChild(heroList);
+
+        // Add a small button to hero demo
+        const heroButton = document.createElement('button');
+        heroButton.className = 'ios-button';
+        const buttonTexts = {
+            en: 'Try Demo',
+            ja: 'デモを試す'
+        };
+        heroButton.textContent = buttonTexts[currentLanguage];
+        heroButton.style.margin = '0';
+        heroButton.onclick = scrollToDemo;
+        heroDemo.appendChild(heroButton);
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Add some visual feedback for haptic feedback on non-supporting devices
+    const originalHaptic = window.iosHaptic;
+    window.iosHaptic = function(type) {
+        // Call original haptic function
+        if (originalHaptic) {
+            originalHaptic(type);
+        }
+        
+        // Visual feedback for demo purposes
+        const feedbackMessages = {
+            en: {
+                'light': 'Light haptic feedback 📳',
+                'medium': 'Medium haptic feedback 📳',
+                'heavy': 'Heavy haptic feedback 📳',
+                'success': 'Success haptic pattern ✅',
+                'error': 'Error haptic pattern ❌'
+            },
+            ja: {
+                'light': 'ライトハプティックフィードバック 📳',
+                'medium': 'ミディアムハプティックフィードバック 📳',
+                'heavy': 'ヘビーハプティ​​ックフィードバック 📳',
+                'success': '成功ハプティックパターン ✅',
+                'error': 'エラーハプティックパターン ❌'
             }
         };
-    </script>
+        
+        if (feedbackMessages[currentLanguage][type]) {
+            // Only show haptic feedback message occasionally to avoid spam
+            if (Math.random() < 0.3) {
+                iosToast(feedbackMessages[currentLanguage][type], 1000);
+            }
+        }
+    };
+</script>
 </body>
 </html>
